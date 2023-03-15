@@ -14,7 +14,8 @@ class Card(models.Model):
     
     user = models.ForeignKey(
         User,
-        on_delete=models.CASCADE)
+        on_delete=models.CASCADE,
+        related_name='cards')
     
     def __str__(self):
         return f"{self.user} - {self.card_number}"
@@ -32,7 +33,8 @@ class Transaction(models.Model):
 
     card = models.ForeignKey(
         Card,
-        on_delete=models.CASCADE)
+        on_delete=models.CASCADE,
+        related_name='transactions')
 
     target_card_number = models.CharField(max_length=22, blank=True, null=True)
 
@@ -52,7 +54,7 @@ class Transaction(models.Model):
     _transaction_id = models.CharField(unique=True, max_length=50)
 
     def save(self, *args, **kwargs):
-        self._transaction_id = datetime.datetime.now().strftime("%Y%m%d%H%M%S") + str(self.user_card_number)[-4:]
+        self._transaction_id = datetime.datetime.now().strftime("%Y%m%d%H%M%S") + str(self.card)[-4:]
         super(Transaction, self).save(*args, **kwargs)
 
     @property

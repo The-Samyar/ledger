@@ -1,10 +1,35 @@
 from django.shortcuts import render
+from django.contrib.auth import models
+from . import models
+
+user = models.User.objects.get(username="akbar")
 
 # Create your views here.
 def index(request):
-    return render(request, "index.html")
+    context = {
+        # 'card' : user.card_set.all(),
+        # 'card' : user.cards.first(),
+        'user' : user,
+    }
+    return render(request, "index.html", context)
 
+def index2(request):
+    context = {
+        'user' : user,
+    }
+    user_cards = user.cards.all()
+    transactions = models.Transaction.objects.filter(card__in=user_cards).order_by('-date')
+    print("###################")
+    print(transactions)
+    print("###################")
+    return render(request, "index2.html", context)
 
+def transactions(request):
+    context = {
+        'user' : user,
+        'transactions' : models.Transaction.objects.filter(card__in=user.cards.all())
+    }
+    return render(request, "transactions.html", context)
 '''
 def LoginPage(request):
 
