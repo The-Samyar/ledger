@@ -14,14 +14,15 @@ def index(request):
     return render(request, "index.html", context)
 
 def index2(request):
+    user_cards = user.cards.all()
+    transactions = models.Transaction.objects.filter(card__in=user_cards).order_by('-date_time')
     context = {
         'user' : user,
+        'deposits' : transactions.filter(action='deposit')[:5],
+        'withdraws' : transactions.filter(action='withdraw')[:5],
     }
-    user_cards = user.cards.all()
-    transactions = models.Transaction.objects.filter(card__in=user_cards).order_by('-date')
-    print("###################")
-    print(transactions)
-    print("###################")
+    print(transactions.filter(action='deposit'))
+    print(transactions.filter(action='withdraw'))
     return render(request, "index2.html", context)
 
 def transactions(request):

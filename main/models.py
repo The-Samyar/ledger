@@ -40,7 +40,7 @@ class Transaction(models.Model):
 
     target_account_type = models.CharField(max_length=10, choices=ACCOUNT_TYPE_CHOICES,blank=True, null=True)
     
-    date = models.DateField()
+    date_time = models.DateTimeField(default=datetime.datetime.now)
 
     amount = models.IntegerField()
 
