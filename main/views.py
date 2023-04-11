@@ -1,28 +1,108 @@
 from django.shortcuts import render
 from django.contrib.auth import models
+from django.db.models import Sum
 from . import models
+import json
+from datetime import datetime
 
 user = models.User.objects.get(username="akbar")
 
-# Create your views here.
-def index(request):
-    context = {
-        # 'card' : user.card_set.all(),
-        # 'card' : user.cards.first(),
-        'user' : user,
-    }
-    return render(request, "index.html", context)
+# TODO generate colors on demand
+BALANCE_BANK_COLORS = ["rgb(133, 105, 241)",
+                       "rgb(164, 101, 241)",
+                       "rgb(101, 143, 241)",
+                       "rgb(46, 23, 96)",
+                       "rgb(226, 141, 181)",
+                       "rgb(71, 92, 230)",
+                        ]
 
-def index2(request):
+MONTHS = ["January","February","March","April","May","June","July","August","September", "October", "November", "December"]
+
+# Create your views here.
+# def index(request):
+#     context = {
+#         # 'card' : user.card_set.all(),
+#         # 'card' : user.cards.first(),
+#         'user' : user,
+#     }
+#     return render(request, "index.html", context)
+
+def index(request):
+    # TODO filter 'incomes' and 'expenses' to show only for the current month
+
     user_cards = user.cards.all()
     transactions = models.Transaction.objects.filter(card__in=user_cards).order_by('-date_time')
+    deposits = transactions.filter(action='deposit')
+    withdraws = transactions.filter(action='withdraw')
+
+    doughnutChartData = {
+        "labels": list(user_cards.values_list('bank_name',flat=True)),
+        "datasets" : [{
+                "label": "Balance",
+                "data": list(user_cards.values_list('balance',flat=True)),
+                "backgroundColor": BALANCE_BANK_COLORS[:len(user_cards)],
+                "hoverOffset": 10,
+                },],
+    }
+    doughnutChartData = json.dumps(doughnutChartData)
+
+    now = datetime.now()
+    labels = []
+    total_withdraws = []
+    total_deposits = []
+    for i in range(6):
+        desired_month = ((now.month-1) + 7 + i) % 12
+        labels.append(MONTHS[desired_month])
+        a = withdraws.filter(date_time__year=now.year, date_time__month=desired_month+1).aggregate(total=Sum('amount'))['total']
+        b = deposits.filter(date_time__year=now.year, date_time__month=desired_month+1).aggregate(total=Sum('amount'))['total']
+        total_withdraws.append(a if a != None else 0)
+        total_deposits.append(b if b != None else 0)
+
+    
+
+    lineChartData = {
+        "labels": labels,
+        "datasets" : [{
+                "label": "Last 6 months expenses",
+                "backgroundColor": "hsl(267, 83%, 67%)",
+                "borderColor": "hsl(267, 83%, 67%)",
+                "data": total_withdraws,
+                },
+                {
+                "label": "Last 6 months earnings",
+                "backgroundColor": "hsl(217, 57%, 51%)",
+                "borderColor": "hsl(217, 57%, 51%)",
+                "data": total_deposits,
+                },],
+    }
+        # const labels = ["January", "February", "March", "April", "May", "June"];
+        # const data = {
+        #     labels: labels,
+        #     datasets: [
+        #     {
+        #         label: "My First dataset",
+        #         backgroundColor: "hsl(217, 57%, 51%)",
+        #         borderColor: "hsl(217, 57%, 51%)",
+        #         data: [0, 10, 5, 2, 20, 30, 45],
+        #     },
+        #     ],
+        # };
+
+    lineChartData = json.dumps(lineChartData)
+
     context = {
         'user' : user,
-        'deposits' : transactions.filter(action='deposit')[:5],
-        'withdraws' : transactions.filter(action='withdraw')[:5],
+        'deposits' : deposits[:3],
+        'withdraws' : withdraws[:3],
+        'balance' : user.cards.aggregate(total=Sum('balance')),
+        'incomes' : deposits.aggregate(total=Sum('amount')),
+        'expenses' : withdraws.aggregate(total=Sum('amount')),
+        'cards' : user_cards,
+        'doughnutChartData' : doughnutChartData,
+        'lineChartData' : lineChartData,
     }
-    print(transactions.filter(action='deposit'))
-    print(transactions.filter(action='withdraw'))
+    # print(transactions.filter(action='deposit'))
+    # print(transactions.filter(action='withdraw'))
     return render(request, "index2.html", context)
 
 def transactions(request):

@@ -1,4 +1,5 @@
 {% load static tailwind_tags %}
+{% load static %}
 {% load separate %}
 <!DOCTYPE html>
 <html lang="en">
@@ -12,7 +13,7 @@
 </head>
 <body>
     <div class="bg-dark w-full h-screen grid grid-cols-12">
-
+        <!-- SIDEBAR START -->
         <div class="col-span-2 py-10">
             <div class="ml-16 text-violet font-bold block text-3xl"><a href="#">ZBank.</a></div>
             <ul class="pt-20 leading-8">
@@ -40,135 +41,325 @@
                         <span>Profile</span>
                     </a>
                 </li>
-
-
             </ul>
         </div>
+        <!-- SIDEBAR END -->
 
-        <div class="bg-light col-span-6 py-8 px-5">
+        <!-- MAIN BODY START -->
+        <div class="bg-light col-span-10 py-8 px-5">
+            <!-- TOP HEADER START -->
             <div class="flex justify-between px-1">
-                <p class="text-lg text-white inline">Hi {{ user.first_name }},</p>
-                <div class="relative flex items-center" >
-                    <input class=" placeholder:text-neutral-400 bg-dark border-none rounded-full text-sm pl-7 pr-20 py-2 focus:placeholder:text-neutral-400 focus:text-white" placeholder="Search" type="text" name="search"/>
-                    <span class="absolute pl-2">
-                        <svg class="w-4 h-4 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    </span>
+                <p class="text-lg text-white inline">
+                    Welcome back {{ user.first_name }},
+                </p>
+                <div class="text-sm text-slate-300 mr-3 flex items-center space-x-4" >
+                    <img id="avatarButton" type="button" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start" class="w-10 h-10 rounded-full cursor-pointer" src="{% static '/main/img/profile.webp'%}" alt="User dropdown">
+                    <!-- Dropdown menu -->
+                    <div id="userDropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                        <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                        <div>Bonnie Green</div>
+                        <div class="font-medium truncate">name@flowbite.com</div>
+                        </div>
+                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
+                        <li>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
+                        </li>
+                        <li>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
+                        </li>
+                        </ul>
+                        <div class="py-1">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
+                        </div>
+                    </div>
+                    <div class="font-medium dark:text-white">
+                        <div>{{ user.first_name }} {{user.last_name }}</div>
+                        <div class="text-sm text-gray-500 dark:text-gray-400">{% now "l, j F Y" %}</div>
+                    </div>
                 </div >
             </div>
-            <p class="text-sm text-slate-400 mt-3 pl-1">Welcome back</p>
-            <div class="ghasem grid grid-cols-6 grid-rows-3 gap-6 mt-14">
-                <div class="bg-card col-span-3 row-span-1 rounded-3xl p-5 leading-10">
-                    <div class="flex justify-between">
-                        <span class="font-bold text-2xl text-slate-200">{{ user.cards.first.bank_name|upper }}</span>
-                        <span><svg class="w-7 h-7 text-slate-200 text-center" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg></span>
+            <!-- <p class="text-sm text-slate-400 mt-3 pl-1">Welcome back</p> -->
+            <!-- TOP HEADER END -->
+
+            <!-- CONTENT BODY START -->
+            <div class="grid grid-cols-7 h-max gap-6 mt-10">
+                <div class=" col-start-1 col-span-3 row-start-1 row-span-1 grid grid-cols-2 grid-rows-1 gap-6">
+                    <!-- INCOME START -->
+                    <div class="bg-dark col-start-1 col-span-1 row-start-1 row-span-1 rounded-3xl p-4">
+                        <div class="flex justify-between">
+                            <span class="font-bold text-slate-300">Income</span>
+                            <button class="rounded-2xl text-center text-sm bg-light text-neutral-400 p-1.5">
+                                <span class="pl-1">Recent</span>
+                                <svg class="w-3 h-3 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                        </div>
+                        <div class="text-center list-none list-outside hover:list-inside leading-loose font-bold text-5xl text-slate-400 hover:text-slate-200">
+                            {{ incomes.total }}
+                        </div>
                     </div>
-                    <p class="font-bold text-center text-slate-200 tracking-widest" id="cardNumber">{% for chunk in user.cards.first.card_number|separate %} {{chunk}} {% endfor %}</p>
-                    <div class="flex justify-between text-slate-200 text-sm">
-                        <span>Card Holder</span>
-                        <span>Exp Date</span>
+                        <!-- INCOME END -->
+                    
+                    <!-- EXPENSES START -->
+                    <div class="bg-dark col-start-2 col-span-1 row-start-1 row-span-1 rounded-3xl p-4">
+                        <div class="flex justify-between">
+                            <span class="font-bold text-slate-300">Expenses</span>
+                            <button class="rounded-2xl text-center text-sm bg-light text-neutral-400 p-1.5">
+                                <span class="pl-1">Recent</span>
+                                <svg class="w-3 h-3 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                        </div>
+                        <div class="text-center list-none list-outside hover:list-inside leading-loose font-bold text-5xl text-slate-400 hover:text-slate-200">
+                            {{ expenses.total }}
+                        </div>
                     </div>
-                    <div class="flex justify-between text-slate-200">
-                        <span class="font-bold text-lg" id="cardHolder">{{ user.first_name}} {{ user.last_name}}</span>
-                        <span class="font-bold" id="expDate">{{ user.cards.first.expiry_date|date:"m/y"}}</span>
-                    </div>
+                    <!-- EXPENSES END -->
                 </div>
-                <div class="bg-dark col-span-3 row-span-1 rounded-3xl p-4">
+
+                <!-- BALANCE START-->
+                    <div class="bg-dark col-start-1 col-span-3 row-start-2 row-span-2 rounded-3xl p-5">
+                        <div class="flex justify-between">
+                            <span class="font-bold text-2xl text-slate-200">Balance</span>
+                        </div>
+                        <div class="flex justify-between">
+
+                            <div>
+                                {% for card in cards %}
+                                <div class="text-slate-200 mt-4">
+                                    <span>
+                                        <svg class="w-4 h-4 inline-block mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                                        {{ card.bank_name }}
+                                    </span>
+                                    <p class=" text-slate-400 hover:text-slate-200 ml-4">
+                                        ${{ card.balance }}
+                                    </p>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            
+                            <!-- PIECHART START -->
+                            <div>
+                                <div class="m-4">
+
+                                    <canvas class="" id="chartDoughnut"></canvas>
+                                </div>
+                                  
+                                <!-- Required chart.js -->
+                                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                                
+                                <!-- Chart doughnut -->
+                                <script>
+                                    var doughnutChartData = JSON.parse('{{ doughnutChartData|safe }}')
+                                    console.log(doughnutChartData)
+
+                                    const dataDoughnut = doughnutChartData
+
+                                const configDoughnut = {
+                                    type: "doughnut",
+                                    data: dataDoughnut,
+                                    options: {},
+                                };
+                                
+                                var chartBar = new Chart(
+                                    document.getElementById("chartDoughnut"),
+                                    configDoughnut
+                                );
+                                </script>
+                            </div>
+                            <!-- PIECHART END -->
+                        </div>   
+                    </div>
+                <!-- BALANCE END -->
+                
+                <!-- WITHDRAWAL HISTORY START -->
+                <div class="bg-dark col-start-4 col-span-2 row-start-1 row-span-1 rounded-3xl p-4">
                     <div class="flex justify-between">
-                        <span class="font-bold text-slate-300">Send money</span>
+                        <span class="font-bold text-slate-300">Recent expenses</span>
                         <button class="rounded-2xl text-center text-sm bg-light text-neutral-400 p-1.5">
-                            <span class="pl-1">Monthly</span>
+                            <span class="pl-1">Recent</span>
                             <svg class="w-3 h-3 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </button>
                     </div>
                     <div class="list-none list-outside hover:list-inside leading-loose">
-                        <div class="flex justify-between text-slate-400 hover:text-slate-200">
-                            <span><svg class="w-4 h-4 inline-block mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                            Helena Foster</span>
-                            <span class="mr-2.5 mt-0.5">$460.00</span>
-                        </div>
-                        <div class="flex justify-between text-slate-400 hover:text-slate-200">
-                            <span><svg class="w-4 h-4 inline-block mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                            Arnish Rahman</span>
-                            <span class="mr-2.5 mt-0.5">$160.00</span>
-                        </div>
-                        <div class="flex justify-between text-slate-400 hover:text-slate-200">
-                            <span><svg class="w-4 h-4 inline-block mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                            Jennifer Lauren</span>
-                            <span class="mr-2.5 mt-0.5">$290.00</span>
-                        </div>
+                        {% for withdraw in withdraws %}
+                            <div class="flex justify-between text-slate-400 hover:text-slate-200">
+                                <span><svg class="w-4 h-4 inline-block mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                                {{withdraw.target_card_number}}</span>
+                                <span class="mr-2.5 mt-0.5">${{withdraw.amount}}</span>
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
-                <div class="bg-dark col-span-3 row-span-2 rounded-3xl p-4">
+                <!-- WITHDRAWAL HISTORY END -->
+
+                <!-- INCOME HISTORY START -->
+                <div class="bg-dark col-start-6 col-span-2 row-start-1 row-span-1 rounded-3xl p-4">
                     <div class="flex justify-between">
-                        <span class="font-bold text-slate-300">Earnings</span>
+                        <span class="font-bold text-slate-300">Recent incomes</span>
                         <button class="rounded-2xl text-center text-sm bg-light text-neutral-400 p-1.5">
                             <span class="pl-1">Recent</span>
                             <svg class="w-3 h-3 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </button>
                     </div>
+                    <div class="list-none list-outside hover:list-inside leading-loose">
+                        {% for deposit in deposits %}
+                            <div class="flex justify-between text-slate-400 hover:text-slate-200">
+                                <span><svg class="w-4 h-4 inline-block mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                                {{deposit.target_card_number}}</span>
+                                <span class="mr-2.5 mt-0.5">${{deposit.amount}}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
-                <div class="bg-dark col-span-3 row-span-2 rounded-3xl p-4">
+                <!-- INCOME HISTORY END -->
+
+                <!-- GRAPH START -->
+                <div class="bg-dark col-start-4 col-span-4 row-start-2 row-span-2 rounded-3xl p-4">
                     <div class="flex justify-between">
-                        <span class="font-bold text-slate-300">Expenditures</span>
+                        <span class="font-bold text-slate-300">Expenditure summary</span>
                         <button class="rounded-2xl text-center text-sm bg-light text-neutral-400 p-1.5">
                             <span class="pl-1">Recent</span>
                             <svg class="w-3 h-3 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </button>
-                    </div>
+                    </div>  
+                    <canvas class="p-2" id="chartLine"></canvas>
+
+                    <!-- Required chart.js -->
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+                    <!-- Chart line -->
+                    <script>
+                    var lineChartData = JSON.parse('{{ lineChartData|safe }}')
+                    console.log(lineChartData)
+                    const data = lineChartData
+
+                    const configLineChart = {
+                        type: "line",
+                        data,
+                        options: {},
+                    };
+
+                    var chartLine = new Chart(
+                        document.getElementById("chartLine"),
+                        configLineChart
+                    );
+                    </script>
                 </div>
+                <!-- GRAPH END -->
+                <!-- <div class="col-start-1 col-span-2 row-start-2 row-span-2 grid grid-cols-1 grid-rows-3 gap-6">
+                        <div class="bg-dark col-start-1 col-span-1 row-start-1 row-span-1 rounded-3xl p-4">
+                            <div class="flex justify-between">
+                                <span class="font-bold text-slate-300">Earnings</span>
+                                <button class="rounded-2xl text-center text-sm bg-light text-neutral-400 p-1.5">
+                                    <span class="pl-1">Recent</span>
+                                    <svg class="w-3 h-3 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </button>
+                            </div>
+                            <div class="list-none list-outside hover:list-inside leading-loose">
+                                {% for deposit in deposits %}
+                                    <div class="flex justify-between text-slate-400 hover:text-slate-200">
+                                        <span><svg class="w-4 h-4 inline-block mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                                        {{deposit.target_card_number}}</span>
+                                        <span class="mr-2.5 mt-0.5">${{deposit.amount}}</span>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="bg-dark col-start-1 col-span-1 row-start-2 row-span-1 rounded-3xl p-4">
+                            <div class="flex justify-between">
+                                <span class="font-bold text-slate-300">Earnings</span>
+                                <button class="rounded-2xl text-center text-sm bg-light text-neutral-400 p-1.5">
+                                    <span class="pl-1">Recent</span>
+                                    <svg class="w-3 h-3 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </button>
+                            </div>
+                            <div class="list-none list-outside hover:list-inside leading-loose">
+                                {% for deposit in deposits %}
+                                    <div class="flex justify-between text-slate-400 hover:text-slate-200">
+                                        <span><svg class="w-4 h-4 inline-block mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                                        {{deposit.target_card_number}}</span>
+                                        <span class="mr-2.5 mt-0.5">${{deposit.amount}}</span>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="bg-dark col-start-1 col-span-1 row-start-3 row-span-1 rounded-3xl p-4">
+                            <div class="flex justify-between">
+                                <span class="font-bold text-slate-300">Earnings</span>
+                                <button class="rounded-2xl text-center text-sm bg-light text-neutral-400 p-1.5">
+                                    <span class="pl-1">Recent</span>
+                                    <svg class="w-3 h-3 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </button>
+                            </div>
+                            <div class="list-none list-outside hover:list-inside leading-loose">
+                                {% for deposit in deposits %}
+                                    <div class="flex justify-between text-slate-400 hover:text-slate-200">
+                                        <span><svg class="w-4 h-4 inline-block mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                                        {{deposit.target_card_number}}</span>
+                                        <span class="mr-2.5 mt-0.5">${{deposit.amount}}</span>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                </div>
+                <div class="col-span-5 col-start-3 row-span-3 row-start-1 grid grid-cols-3 grid-rows-2 gap-6">
+                    <div class="bg-dark col-start-1 col-span-1 row-start-1 row-span-1 rounded-3xl p-4">
+                        <div class="flex justify-between">
+                            <span class="font-bold text-slate-300">Earnings</span>
+                            <button class="rounded-2xl text-center text-sm bg-light text-neutral-400 p-1.5">
+                                <span class="pl-1">Recent</span>
+                                <svg class="w-3 h-3 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                        </div>
+                        <div class="list-none list-outside hover:list-inside leading-loose">
+                            {% for deposit in deposits %}
+                                <div class="flex justify-between text-slate-400 hover:text-slate-200">
+                                    <span><svg class="w-4 h-4 inline-block mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                                    {{deposit.target_card_number}}</span>
+                                    <span class="mr-2.5 mt-0.5">${{deposit.amount}}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="bg-dark col-start-2 col-span-2 row-span-1 rounded-3xl p-4">
+                        <div class="flex justify-between">
+                            <span class="font-bold text-slate-300">Earnings summary</span>
+                            <button class="rounded-2xl text-center text-sm bg-light text-neutral-400 p-1.5">
+                                <span class="pl-1">Recent</span>
+                                <svg class="w-3 h-3 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                        </div>    
+                    </div>
+                    <div class="bg-dark col-start-1 col-span-1 row-start-2 row-span-1 rounded-3xl p-4">
+                        <div class="flex justify-between">
+                            <span class="font-bold text-slate-300">Expenditures</span>
+                            <button class="rounded-2xl text-center text-sm bg-light text-neutral-400 p-1.5">
+                                <span class="pl-1">Recent</span>
+                                <svg class="w-3 h-3 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                        </div>
+                        <div class="list-none list-outside hover:list-inside leading-loose">
+                            {% for withdraw in withdraws %}
+                                <div class="flex justify-between text-slate-400 hover:text-slate-200">
+                                    <span><svg class="w-4 h-4 inline-block mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                                    {{ withdraw.target_card_number }}</span>
+                                    <span class="mr-2.5 mt-0.5">${{ withdraw.amount }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>    
+                    <div class="bg-dark col-start-2 col-span-2 row-start-2 row-span-1 rounded-3xl p-4">
+                        <div class="flex justify-between">
+                            <span class="font-bold text-slate-300">Expenditure summary</span>
+                            <button class="rounded-2xl text-center text-sm bg-light text-neutral-400 p-1.5">
+                                <span class="pl-1">Recent</span>
+                                <svg class="w-3 h-3 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                        </div>    
+                    </div>
+                </div> -->
             </div>
         </div>
-        <div class="bg-light col-span-4 py-10 px-6">
-            <div class="mb-4">
-                <span><img class="rounded-full h-16 w-16 inline-block" src="./pic/profile-square-extra-small.png" alt="profile"></span>
-                <div class="inline-block">
-                    <span class="text-slate-300 bold block">Rakib Kowshar</span>
-                    <span class="text-sm text-slate-400 block">UI / UX designer</span>
-                </div>
-            </div>
-            <div class="flex justify-between mb-4 mt-16">
-                <span class="font-bold text-lg text-slate-300">Transaction</span>
-                <button class="rounded-2xl text-center text-sm bg-light text-neutral-400 p-1.5">
-                    <span class="pl-1">Monthly</span>
-                    <svg class="w-3 h-3 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </button>
-            </div>
-            <div class="leading-loose grid grid-cols-1 divide-y divide-slate-600">
-                <div class="flex justify-between pt-2 pb-3">
-                    <div class="block text-slate-300">Apple pro
-                    <p class="text-sm text-slate-400">Apr 18, 2022</p>
-                    </div>
-                    <span class="text-slate-400">$300.00</span>
-                </div>
-                <div class="flex justify-between pt-2 pb-3">
-                    <div class="block text-slate-300">Fruity pizza
-                    <p class="text-sm text-slate-400">Apr 18, 2022</p>
-                    </div>
-                    <span class="text-slate-400">$29.00</span>
-                </div>
-                <div class="flex justify-between pt-2 pb-3">
-                    <div class="block text-slate-300">Netflix
-                    <p class="text-sm text-slate-400">Apr 18, 2022</p>
-                    </div>
-                    <span class="text-slate-400">$50.00</span>
-                </div>
-                <div class="flex justify-between pt-2 pb-3">
-                    <div class="block text-slate-300">Spotify
-                    <p class="text-sm text-slate-400">Apr 18, 2022</p>
-                    </div>
-                    <span class="text-slate-400">$39.00</span>
-                </div>
-                <div class="flex justify-between pt-2 pb-3">
-                    <div class="block text-slate-300">Book shop
-                    <p class="text-sm text-slate-400">Apr 18, 2022</p>
-                    </div>
-                    <span class="text-slate-400">$40.00</span>
-                </div>
-            </div>
-            <div class="text-slate-100 text-2xl text-center pt-12">
-                Track your acc anytime anywhere 
-            </div>
-        </div>
-    </div>
-</body>
-</html>
