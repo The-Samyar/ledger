@@ -103,7 +103,7 @@ def index(request):
     }
     # print(transactions.filter(action='deposit'))
     # print(transactions.filter(action='withdraw'))
-    return render(request, "index2.html", context)
+    return render(request, "index.html", context)
 
 def transactions(request):
     context = {
