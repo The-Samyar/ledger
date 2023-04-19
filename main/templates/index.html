@@ -24,7 +24,7 @@
                     </a>
                 </li>
                 <li class="block font-medium text-menu hover:text-menulight ml-16 mb-5 hover:bg-light hover:rounded-l-full hover:ml-8 hover:pr-10 hover:pl-2">
-                    <a href="transactions/">
+                    <a href="/transactions">
                         <svg class="w-6 h-6 inline-block mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
                         <span>Transactions</span>
                     </a>
@@ -52,10 +52,10 @@
                 <p class="text-lg text-white inline">
                     Welcome back {{ user.first_name }},
                 </p>
-                <div class="text-sm text-slate-300 mr-3 flex items-center space-x-4" >
-                    <img id="avatarButton" type="button" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start" class="w-10 h-10 rounded-full cursor-pointer" src="{% static '/main/img/profile.webp'%}" alt="User dropdown">
+                <div class="text-sm text-slate-300 mr-3 flex items-center space-x-4 relative" >
+                    <img id="avatarButton" type="button" onclick="dropDownFunction()" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start" class="w-10 h-10 rounded-full cursor-pointer" src="{% static '/main/img/profile.webp'%}" alt="User dropdown">
                     <!-- Dropdown menu -->
-                    <div id="userDropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                    <div id="userDropdown" hidden class="z-10 absolute top-12 -left-4 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                         <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
                         <div>Bonnie Green</div>
                         <div class="font-medium truncate">name@flowbite.com</div>
@@ -160,8 +160,19 @@
                                 const configDoughnut = {
                                     type: "doughnut",
                                     data: dataDoughnut,
-                                    options: {},
-                                };
+                                    options: {
+                                        plugins: {
+                                            legend: {
+                                                labels: {
+                                                    color : "#FBFBFF",
+                                                    font: {
+                                                        size: 12
+                                                    }
+                                                }
+                                            }
+                                        },
+                                    }
+                                    };
                                 
                                 var chartBar = new Chart(
                                     document.getElementById("chartDoughnut"),
@@ -239,13 +250,47 @@
                     const configLineChart = {
                         type: "line",
                         data,
-                        options: {},
+                        options: {
+                            plugins: {
+                                legend: {
+                                    labels: {
+                                        color : "#FBFBFF",
+                                        font: {
+                                            size: 14
+                                        }
+                                    }
+                                }
+                            },
+
+                            scales: {
+                                y : {
+                                    ticks : {
+                                        color : '#FBFBFF'
+                                    }
+                                },
+                                x : {
+                                    ticks : {
+                                        color : '#FBFBFF'
+                                    }
+                                }
+                            }
+                        },
                     };
 
                     var chartLine = new Chart(
                         document.getElementById("chartLine"),
                         configLineChart
                     );
+                    </script>
+                    <script>
+                        function dropDownFunction(){
+                            element = document.getElementById("userDropdown")
+                            if (element.hidden == false){
+                                element.hidden = true
+                            } else {
+                                element.hidden = false
+                            }
+                        }
                     </script>
                 </div>
             </div>

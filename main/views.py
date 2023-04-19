@@ -101,8 +101,7 @@ def index(request):
         'doughnutChartData' : doughnutChartData,
         'lineChartData' : lineChartData,
     }
-    # print(transactions.filter(action='deposit'))
-    # print(transactions.filter(action='withdraw'))
+
     return render(request, "index.html", context)
 
 def transactions(request):

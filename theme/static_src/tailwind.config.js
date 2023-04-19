@@ -51,10 +51,33 @@ module.exports = {
                 menulight: '#EB638B',
                 white: '#FBFBFF',
                 card: '#EA6CA1',
-              },
-              height: {
-                '500': '700px',
-              }        
+            },
+            height: {
+            '800': '800px',
+            '700': '700px',
+            '650': '650px',
+            '620': '620px',
+            '600': '600px',
+            '580': '580px',
+            '550': '550px',
+            '500': '500px',
+            '450': '450px',
+            '400': '400px',
+            },
+            width: {
+            '1000': '1000px',
+            '850': '850px',
+            '800': '800px',
+            '700': '700px',
+            '650': '650px',
+            '620': '620px',
+            '600': '600px',
+            '580': '580px',
+            '550': '550px',
+            '500': '500px',
+            '450': '450px',
+            '400': '400px',
+            }       
         },
     },
     plugins: [
@@ -67,5 +90,6 @@ module.exports = {
         require('@tailwindcss/typography'),
         require('@tailwindcss/line-clamp'),
         require('@tailwindcss/aspect-ratio'),
+        require('tailwind-scrollbar'),
     ],
 }
