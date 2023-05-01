@@ -117,7 +117,7 @@
                                                 <form action="edit/{{transaction.transaction_id}}/" method="post">
                                                     {% csrf_token %}
                                                     <td class="px-3 py-4 box-border" style="width: 15%;">
-                                                        <input class="input enabled:border-2 enabled:animate-pulse rounded-md px-1 border-violet bg-inherit p-0 border-0 text-sm w-full" type="datetime-local" name="from" value="{{ transaction.date_time | date:'Y-m-d H:i'}}" disabled>
+                                                        <input class="input enabled:border-2 enabled:animate-pulse rounded-md px-1 border-violet bg-inherit p-0 border-0 text-sm w-full" type="datetime-local" name="from" value="{{ transaction.date_time | date:'Y-m-d H:i'}}" onchange="addChangedInput()" disabled>
                                                     </td>
                                                     <td class="px-3 py-4 box-border" style="width: 15%;">
                                                         {% if transaction.action == 'deposit' %}
@@ -171,6 +171,11 @@
                                             </tr>
                                             {% endfor %}            
                                             <script>
+                                                changedInputs = 0
+                                                function addChangedInput(changedInput){
+                                                    changedInputs++;
+                                                }
+
                                                 function messageEnable(tId){
                                                     notes = document.getElementsByName('note')
                                                     element = document.getElementById('note' + tId)
@@ -188,15 +193,23 @@
                                                 function edit(tId){
                                                     row = document.getElementById(tId)
                                                     button = row.getElementsByClassName("edit_button")[0]
+                                                    inputs = row.getElementsByClassName("input")
                                                     if(button.value == "Edit"){
                                                         button.value = "Save"
                                                         button.innerHTML = "Save"
-                                                        inputs = row.getElementsByClassName("input")
                                                         for(let i = 0; i < inputs.length; i++){
                                                             inputs[i].disabled = false
                                                         }
                                                     } else {
-                                                        row.getElementsByTagName("form")[0].submit()
+                                                        if (changedInputs > 0 ){
+                                                            row.getElementsByTagName("form")[0].submit()
+                                                        } else {
+                                                            button.value = "Edit"
+                                                            button.innerHTML = "Edit"
+                                                            for(let i = 0; i < inputs.length; i++){
+                                                                inputs[i].disabled = true
+                                                            }
+                                                        }
                                                     }
                                                 }
                                             </script>
