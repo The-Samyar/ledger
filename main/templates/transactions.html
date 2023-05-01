@@ -86,7 +86,7 @@
             <!-- CONTENT BODY START -->
             <div class="grid grid-cols-7 gap-6 mt-10">
                 <!-- TRANSACTIONS TABLE START -->   
-                <div class="bg-dark col-start-1 col-span-5 relative shadow-md rounded-3xl">
+                <div class="bg-dark col-start-1 col-span-full relative shadow-md rounded-3xl">
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
                         <thead class="text-xs uppercase sticky top-0 bg-violet text-dark">
                             <tr class="">
@@ -97,7 +97,7 @@
                                     To
                                 </th>
                                 <th scope="col" class="px-6 py-3 box-border" style="width: 15%;">
-                                    Amonut
+                                    Amount
                                 </th>
                                 <th scope="col" class="px-6 py-3 box-border " style="width: 19%;">
                                     Action
@@ -109,39 +109,97 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td colspan="5">
-                                    <div class="vertical-scroll overflow-y-scroll h-580 rounded-bl-3xl">
+                                <td colspan="7">
+                                    <div class="vertical-scroll overflow-y-scroll h-430 rounded-bl-3xl  mr-1">
                                         <table class="w-full">
                                             {% for transaction in transactions %}
-                                            <tr class="border-b bg-dark border-gray-700 hover:bg-gray-600">
-                                                <td class="px-6 py-4 box-border" style="width: 23%;">
-                                                    {% if transaction.action == 'deposit' %}
-                                                    {{ transaction.target_card_number }}
-                                                    {% else %}
-                                                    {{ transaction.card.card_number }}
-                                                    {% endif %}
-                                                </td>
-                                                <td class="px-6 py-4 box-border" style="width: 23%;">
-                                                    {% if transaction.action == 'deposit' %}
-                                                {{ transaction.card.card_number }}
-                                                {% else %}
-                                                {{ transaction.target_card_number }}
-                                                {% endif %}
-                                                </td>
-                                                <td class="px-6 py-4 box-border" style="width: 15%;">
-                                                    ${{ transaction.amount }}
-                                                </td>
-                                                <td class="px-6 py-4 box-border" style="width: 20%;">
-                                                    {{ transaction.action }}
-                                                </td>
-                                                <td class="px-6 py-4 box-border" style="width: 12%;">
-                                                    <button>
-                                                        show
-                                                    </button>
-                                                    <!-- {{ transaction.notes }} -->
-                                                </td>
+                                            <tr id="{{ transaction.transaction_id }}" class="border-b bg-dark border-gray-700 hover:bg-gray-600">
+                                                <form action="edit/{{transaction.transaction_id}}/" method="post">
+                                                    {% csrf_token %}
+                                                    <td class="px-3 py-4 box-border" style="width: 15%;">
+                                                        <input class="input enabled:border-2 enabled:animate-pulse rounded-md px-1 border-violet bg-inherit p-0 border-0 text-sm w-full" type="datetime-local" name="from" value="{{ transaction.date_time | date:'Y-m-d H:i'}}" disabled>
+                                                    </td>
+                                                    <td class="px-3 py-4 box-border" style="width: 15%;">
+                                                        {% if transaction.action == 'deposit' %}
+                                                        <input class="input enabled:border-2 enabled:animate-pulse rounded-md px-1 border-violet bg-inherit p-0 border-0 text-sm w-full" type="text" name="from" value="{{ transaction.target_card_number }}" disabled>
+                                                        {% else %}
+                                                        <input class="input enabled:border-2 enabled:animate-pulse rounded-md px-1 border-violet bg-inherit p-0 border-0 text-sm w-full" type="text" name="from" value="{{ transaction.target_card_number }}" disabled>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="px-3 py-4 box-border" style="width: 15%;">
+                                                        {% if transaction.action == 'deposit' %}
+                                                        <input class="input enabled:border-2 enabled:animate-pulse rounded-md px-1 border-violet bg-inherit p-0 border-0 text-sm w-full" type="text" name="to" value="{{ transaction.card.card_number }}" disabled>
+                                                        {% else %}
+                                                        <input class="input enabled:border-2 enabled:animate-pulse rounded-md px-1 border-violet bg-inherit p-0 border-0 text-sm w-full" type="text" name="to" value="{{ transaction.card.card_number }}" disabled>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="px-3 py-4 box-border " style="width: 8%;">
+                                                        <div class="flex justify-center">
+                                                            <span>$</span>
+                                                            <input class="input enabled:border-2 enabled:animate-pulse rounded-md px-1 border-violet bg-inherit p-0 border-0 text-sm w-full" type="number" name="amount" value="{{ transaction.amount }}" disabled>
+                                                        </div>
+                                                    </td>
+                                                    <td class=" px-3 py-4 box-border" style="width: 9%;">
+                                                        <select class="input enabled:border-2 enabled:animate-pulse rounded-md px-1 border-violet bg-inherit p-0 border-0 text-sm w-full" name="action" disabled>
+                                                            <option value="{{ transaction.action }}">{{ transaction.action | capfirst }}</option>
+                                                            {% if transaction.action == 'withdraw' %}
+                                                            <option value="deposit">Deposit</option>
+                                                            {% else %}
+                                                            <option value="withdraw">Withdraw</option>
+                                                            {% endif %}
+                                                        </select>
+                                                    </td>
+                                                    <td class="px-6 py-4 box-border" style="width: 3%;">
+                                                        <div class="relative">
+                                                            <button type="button" class="px-3 " onclick="messageEnable('{{ transaction.transaction_id}}')">
+                                                                View
+                                                            </button>
+                                                            <input class="input enabled:border-2 enabled:animate-pulse px-1 border-violet bg-dark w-80 p-3 border-0 text-sm z-10 absolute top-6 right-6 divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" type="text" name="note" id="note{{ transaction.transaction_id }}" value="{{ transaction.notes }}" hidden disabled>
+                                                        </div>
+                                                    </td>
+                                                    <td class="px-3 py-4 box-border" style="width: 3%;">
+                                                        <div class="flex justify-between">
+                                                            <button type="button" value="Edit" class="px-3 bg-light rounded-3xl border-violet border-2 edit_button" onclick="edit('{{ transaction.transaction_id}}')">
+                                                                Edit
+                                                            </button>
+                                                            <a href="delete/{{ transaction.transaction_id }}" class="px-3  bg-light rounded-3xl border-violet border-2">
+                                                                Delete
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </form>
                                             </tr>
                                             {% endfor %}            
+                                            <script>
+                                                function messageEnable(tId){
+                                                    notes = document.getElementsByName('note')
+                                                    element = document.getElementById('note' + tId)
+                                                    for(i=0; i < notes.length; i++){
+                                                        if(notes[i] != element)
+                                                        notes[i].hidden = true
+                                                    }
+                                                    if(element.hidden == false){
+                                                        element.hidden = true
+                                                    } else {
+                                                        element.hidden = false
+                                                    }
+                                                }
+
+                                                function edit(tId){
+                                                    row = document.getElementById(tId)
+                                                    button = row.getElementsByClassName("edit_button")[0]
+                                                    if(button.value == "Edit"){
+                                                        button.value = "Save"
+                                                        button.innerHTML = "Save"
+                                                        inputs = row.getElementsByClassName("input")
+                                                        for(let i = 0; i < inputs.length; i++){
+                                                            inputs[i].disabled = false
+                                                        }
+                                                    } else {
+                                                        row.getElementsByTagName("form")[0].submit()
+                                                    }
+                                                }
+                                            </script>
                                         </table>
                                     </div>
                                 </td>
@@ -150,17 +208,53 @@
                     </table>
                 </div>
                 <!-- TRANSACTIONS TABLE END -->
-                
-                <div class="col-start-6 col-span-3 grid grid-cols-1 grid-rows-2 gap-6">
-                    <!-- INCOME ANALYSIS START -->
-                    <div class="bg-dark rounded-3xl row-start-1 p-4">
-                    </div>
-                    <!-- INCOME ANALYSIS END -->
-                    <!-- INCOME ANALYSIS START -->
-                    <div class="bg-dark rounded-3xl row-start-2 p-4">
-                    </div>
-                    <!-- INCOME ANALYSIS END -->
+                <!-- TABLE INPUT START -->
+                <div class="col-start-1 col-span-full rounded-3xl bg-violet p-3 text-sm text-gray-400">
+                    <form action="">
+                        <div class="flex justify-around">
+                            <div class="flex justify-around">
+                                <div class="w-1/6 mr-4 bg-dark rounded-2xl px-4 py-3">
+                                    <label class="font-bold text-gray-400" for="">Date and time:</label>
+                                    <input class="input mt-2 bg-violet text-dark rounded-lg p-2 border-0 text-sm w-full" type="datetime-local" name="to" value="">
+                                </div>
+                                <div class="w-1/6 mr-4 bg-dark rounded-2xl px-4 py-3">
+                                    <label class="font-bold text-gray-400" for="">From:</label>
+                                    <input class="input mt-2 bg-violet text-dark placeholder-slate-600 rounded-lg p-2 border-0 text-sm w-full" type="text" name="to" value="" placeholder="Card number...">
+                                </div>
+                                <div class="w-1/6 mr-4 bg-dark rounded-2xl px-4 py-3">
+                                    <label class="font-bold text-gray-400" for="">To:</label>
+                                    <input class="input mt-2 bg-violet text-dark placeholder-slate-600 rounded-lg p-2 border-0 text-sm w-full" type="text" name="to" value="" placeholder="Card number...">
+                                </div>
+                                <div class="w-1/6 mr-4 bg-dark rounded-2xl px-4 py-3">
+                                    <label class="font-bold text-gray-400" for="">Amount:</label>
+                                    <div class="flex justify-center ">
+                                        <span class=" mt-4 -ml-3 mr-1">$</span>
+                                        <input class="input mt-2 bg-violet text-dark placeholder-slate-600 rounded-lg p-2 border-0 text-sm w-full" type="number" name="amount" value="" >
+                                    </div>
+                                    <!-- <input class="input mt-2 bg-violet text-dark placeholder-slate-600 rounded-lg p-2 border-0 text-sm w-full" type="text" name="to" value="" placeholder="$"> -->
+                                </div>
+                                <div class="w-1/6 mr-4 bg-dark rounded-2xl px-4 py-3">
+                                    <label class="font-bold text-gray-400" for="">Action:</label>
+                                    <select class="input mt-2 bg-violet text-dark rounded-lg p-2 border-0 text-sm w-full" name="action">
+                                        <option value="deposit">Deposit</option>
+                                        <option value="withdraw">Withdraw</option>
+                                    </select>
+                                    <!-- <input class="input mt-2 bg-violet text-dark placeholder-slate-600 rounded-lg p-2 border-0 text-sm w-full" type="text" name="to" value=""> -->
+                                </div>
+                                <div class="w-1/6 bg-dark rounded-xl p-4">
+                                    <label class="font-bold text-gray-400" for="">Notes:</label>
+                                    <input class="input mt-2 bg-violet text-dark placeholder-slate-600 rounded-lg p-2 border-0 text-sm w-full" type="text" name="to" value="" placeholder="Notes...">
+                                </div>
+                            </div>
+                            <div class="flex justify-center align-middle">
+                                <button class="  px-3 ml-2 bg-dark rounded-xl border-violet border-2" type="submit">
+                                    Enter
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
+                <!-- TABLE INPUT END -->
             </div>
             <!-- CONTENT BODY END -->
         </div>
