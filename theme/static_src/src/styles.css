@@ -19,3 +19,7 @@ background: #2E2E46;
 border: 2px solid #9999C2;
 border-radius: 100vw;
 }
+
+.akbar{
+    border :rgba(255, 0, 0, .5)
+}

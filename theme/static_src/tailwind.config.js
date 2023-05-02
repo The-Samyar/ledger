@@ -78,7 +78,17 @@ module.exports = {
             '500': '500px',
             '450': '450px',
             '400': '400px',
-            }       
+            },
+            keyframes : {
+                breathe : {
+                    '0%' : {border : '2px solid rgba(153, 153, 194, 1) ' },
+                    '50%' : {border : '2px solid rgba(153, 153, 194, 0)' },
+                    '100%' : {border : '2px solid rgba(153, 153, 194, 1)' },
+                },
+            },
+            animation: {
+                'breathing' : 'breathe 2s linear infinite',
+            }   
         },
     },
     plugins: [
