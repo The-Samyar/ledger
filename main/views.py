@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth import models
 from django.db.models import Sum
-from . import models
+from . import models, forms
 import json
 from datetime import datetime
+
 
 user = models.User.objects.get(username="akbar")
 
@@ -107,9 +108,22 @@ def index(request):
 def transactions(request):
     context = {
         'user' : user,
-        'transactions' : models.Transaction.objects.filter(card__in=user.cards.all())
+        'transactions' : models.Transaction.objects.filter(card__in=user.cards.all()).order_by('-date_time')
     }
     return render(request, "transactions.html", context)
+
+def edit_transaction(request, transaction_id):
+    if request.method == 'POST':
+        form = forms.TransactionForm(
+            request.POST,
+            instance = models.Transaction.objects.get(_transaction_id=transaction_id)
+            )
+        if form.is_valid() == True:
+            # form.save()
+            print("goozzzzzzzzzz")
+        else:
+            pass
+        return redirect('/transactions/')
 '''
 def LoginPage(request):
 
