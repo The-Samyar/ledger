@@ -119,10 +119,10 @@ def edit_transaction(request, transaction_id):
             instance = models.Transaction.objects.get(_transaction_id=transaction_id)
             )
         if form.is_valid() == True:
-            # form.save()
-            print("goozzzzzzzzzz")
+            print("SUCCESS")
+            form.save()
         else:
-            pass
+            print(form.errors.as_json)
         return redirect('/transactions/')
 '''
 def LoginPage(request):

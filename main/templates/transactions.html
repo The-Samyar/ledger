@@ -141,7 +141,8 @@
                                                             {% endif %}
                                                         </select> -->
                                                         <div>
-                                                            <button type="button" class="input action_button border-2 border-transparent enabled:animate-breathing rounded-md px-1 enabled:border-violet bg-inherit p-0 text-sm w-full" name="action" onclick="changeAction('{{ transaction.transaction_id }}')" value="{{ transaction.action }}" disabled>
+                                                            <button type="button" class="input action_button border-2 border-transparent enabled:animate-breathing rounded-md px-1 enabled:border-violet bg-inherit p-0 text-sm w-full" onclick="changeAction('{{ transaction.transaction_id }}')" disabled>
+                                                                <input type="text" class="input action_input" name="action" value="{{ transaction.action }}" hidden disabled>
                                                                 {% if transaction.action == 'deposit'%}
                                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                                                 <path class="text-green-600 green_arrow" stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
@@ -235,16 +236,16 @@
 
                                                 function changeAction(tId){
                                                     addChangedInput()
-                                                    action = document.getElementById(tId).getElementsByClassName('action_button')[0]
-
-                                                    if(action.value == 'deposit'){
-                                                        action.value = 'withdraw'
-                                                        action.getElementsByClassName('green_arrow')[0].style.opacity = '0.2'
-                                                        action.getElementsByClassName('red_arrow')[0].style.opacity = '1'
-                                                    } else {
-                                                        action.value = 'deposit'
-                                                        action.getElementsByClassName('green_arrow')[0].style.opacity = '1'
-                                                        action.getElementsByClassName('red_arrow')[0].style.opacity = '0.2'
+                                                    action_button = document.getElementById(tId).getElementsByClassName('action_button')[0]
+                                                    action_input = action_button.getElementsByClassName('action_input')[0]
+                                                    if(action_input.value == 'deposit'){
+                                                        action_input.value = 'withdraw'
+                                                        action_button.getElementsByClassName('green_arrow')[0].style.opacity = '0.2'
+                                                        action_button.getElementsByClassName('red_arrow')[0].style.opacity = '1'
+                                                    } else if(action_input.value == 'withdraw'){
+                                                        action_input.value = 'deposit'
+                                                        action_button.getElementsByClassName('green_arrow')[0].style.opacity = '1'
+                                                        action_button.getElementsByClassName('red_arrow')[0].style.opacity = '0.2'
                                                         
                                                     }
 
