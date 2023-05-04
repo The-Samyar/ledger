@@ -106,11 +106,28 @@ def index(request):
     return render(request, "index.html", context)
 
 def transactions(request):
-    context = {
-        'user' : user,
-        'transactions' : models.Transaction.objects.filter(card__in=user.cards.all()).order_by('-date_time')
-    }
-    return render(request, "transactions.html", context)
+    if request.method == 'GET':
+        context = {
+            'user' : user,
+            'transactions' : models.Transaction.objects.filter(card__in=user.cards.all()).order_by('-date_time')
+        }
+        return render(request, "transactions.html", context)
+    elif request.method == 'POST':
+        form = forms.TransactionForm(request.POST)
+        if form.is_valid():
+            user_card = form.cleaned_data['card']
+            if form.cleaned_data['action'] == 'deposit':
+                user_card.balance += form.cleaned_data['amount']
+            else:
+                user_card.balance -= form.cleaned_data['amount']
+            user_card.save(), form.save()
+            print("SUCCESS")
+        else:
+            print("FAIL")
+            print(form.errors)
+        return redirect('/transactions/')
+
+    
 
 def edit_transaction(request, transaction_id):
     if request.method == 'POST':
@@ -119,11 +136,40 @@ def edit_transaction(request, transaction_id):
             instance = models.Transaction.objects.get(_transaction_id=transaction_id)
             )
         if form.is_valid() == True:
+            initial_card = models.Card.objects.get(id=form['card'].initial)
+            if form['action'].initial == 'deposit':
+                initial_card.balance -= form['amount'].initial
+            else:
+                initial_card.balance += form['amount'].initial
+            initial_card.save()
+            
+            edited_card = models.Card.objects.get(id=form.cleaned_data['card'].id)
+            if form.cleaned_data['action'] == 'deposit':
+                edited_card.balance += form.cleaned_data['amount']
+            else:
+                edited_card.balance -= form.cleaned_data['amount']
+            edited_card.save()
+            form.save() 
             print("SUCCESS")
-            form.save()
         else:
             print(form.errors.as_json)
         return redirect('/transactions/')
+    
+def delete_transaction(request, transaction_id):
+    target_transaction = models.Transaction.objects.get(_transaction_id=transaction_id)
+    if target_transaction:
+        user_card = target_transaction.card
+        if target_transaction.action == 'deposit':
+            user_card.balance -= target_transaction.amount
+        else:
+            user_card.balance += target_transaction.amount
+
+        target_transaction.delete(), user_card.save()
+        print("SUCCESS")
+    else:
+        print("FAIL")
+    return redirect('/transactions/')
+
 '''
 def LoginPage(request):
 
