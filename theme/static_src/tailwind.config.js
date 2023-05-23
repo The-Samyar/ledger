@@ -40,6 +40,8 @@ module.exports = {
          * and make sure the pattern below matches your project structure.
          */
         // '../../**/*.py'
+
+        './src/**/*.html', './node_modules/flowbite/**/*.js'
     ],
     theme: {
         extend: {
@@ -57,6 +59,7 @@ module.exports = {
             '700': '700px',
             '650': '650px',
             '620': '620px',
+            '605': '605px',
             '600': '600px',
             '580': '580px',
             '550': '550px',
@@ -64,6 +67,11 @@ module.exports = {
             '450': '450px',
             '430': '430px',
             '400': '400px',
+            '350': '350px',
+            '300': '300px',
+            '200': '200px',
+            '150': '150px',
+            '100': '100px',
             },
             width: {
             '1000': '1000px',
@@ -78,6 +86,8 @@ module.exports = {
             '500': '500px',
             '450': '450px',
             '400': '400px',
+            '140': '140px',
+            '100': '100px',
             },
             keyframes : {
                 breathe : {
@@ -102,5 +112,6 @@ module.exports = {
         require('@tailwindcss/line-clamp'),
         require('@tailwindcss/aspect-ratio'),
         require('tailwind-scrollbar'),
+        require('flowbite/plugin')
     ],
 }
