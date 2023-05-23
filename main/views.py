@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import models
-from django.db.models import Sum
+from django.db.models import Sum, Count, Q
 from . import models, forms
 import json
-from datetime import datetime
-
+import datetime
+from django.core import serializers
 
 user = models.User.objects.get(username="akbar")
 
@@ -12,7 +12,7 @@ user = models.User.objects.get(username="akbar")
 BALANCE_BANK_COLORS = ["rgb(133, 105, 241)",
                        "rgb(164, 101, 241)",
                        "rgb(101, 143, 241)",
-                       "rgb(46, 23, 96)",
+                       "rgb(208, 46, 203)",
                        "rgb(226, 141, 181)",
                        "rgb(71, 92, 230)",
                         ]
@@ -42,12 +42,12 @@ def index(request):
                 "label": "Balance",
                 "data": list(user_cards.values_list('balance',flat=True)),
                 "backgroundColor": BALANCE_BANK_COLORS[:len(user_cards)],
-                "hoverOffset": 10,
+                "hoverOffset": 20,
                 },],
     }
     doughnutChartData = json.dumps(doughnutChartData)
 
-    now = datetime.now()
+    now = datetime.datetime.now()
     labels = []
     total_withdraws = []
     total_deposits = []
@@ -170,6 +170,133 @@ def delete_transaction(request, transaction_id):
         print("FAIL")
     return redirect('/transactions/')
 
+def cards(request):
+    if request.method == 'GET':
+        today = datetime.datetime.now()
+        user_cards = user.cards.all()
+        date_format = "%m %d"
+        current_balance = user_cards.aggregate(total_balance=Sum('balance'))['total_balance']
+        labels = [today.strftime(date_format)]
+        # daily_balance = [current_balance]
+        user_transactions = models.Transaction.objects.filter(card__in=user_cards)
+        datasets = [{
+                    "label": "Total balance",
+                    "backgroundColor": "hsl(0, 0%, 100%)",
+                    "borderColor": "hsl(0, 0%, 100%)",
+                    "data": [current_balance],
+                    },
+                    ]
+        for k in range(len(user_cards)):
+            datasets.append({
+                "label": user_cards[k].bank_name,
+                "backgroundColor": BALANCE_BANK_COLORS[k],
+                "borderColor": BALANCE_BANK_COLORS[k],
+                "data": [user_cards[k].balance,],
+                })
+
+        for i in range(1,30):
+            target_date = today - datetime.timedelta(days=i)
+            # day_after = target_date + datetime.timedelta(days=1)
+            labels.append(target_date.strftime(date_format))
+            # target_date = today - datetime.timedelta(days=i)
+            target_date = target_date + datetime.timedelta(days=1)
+            daily_transactions = user_transactions.filter(date_time__year=target_date.year, date_time__month=target_date.month,date_time__day=target_date.day)
+            total_balance = 0
+            for j in range(1,len(datasets)):
+                transactions_sums = daily_transactions.aggregate(
+                    deposits_sum=Sum('amount', filter=(Q(action='deposit') & Q(card=user_cards.get(bank_name=datasets[j]['label']))), default=0),
+                    withdraws_sum=Sum('amount', filter=(Q(action='withdraw') & Q(card=user_cards.get(bank_name=datasets[j]['label']))), default=0)
+                    )
+                # print(transactions_sums)
+                # deposits_sum = daily_transactions.filter(
+                #     card=user_cards.get(bank_name=datasets["label"])
+                #     ).aggregate(
+                #     deposits_sum=Sum('amount', default=0)
+                #     )["deposits_sum"]
+                # withdraws_sum = daily_transactions.filter(
+                #     card=user_cards.get(bank_name=datasets["label"])
+                #     ).aggregate(
+                #     withdraws_sum=Sum('amount', default=0)
+                #     )["withdraws_sum"]
+                card_balance = datasets[j]['data'][-1] - transactions_sums['deposits_sum'] + transactions_sums['withdraws_sum']
+                # print(card_balance)
+                datasets[j]['data'].append(card_balance)
+                total_balance += card_balance
+            datasets[0]["data"].append(total_balance)
+
+            # print(datasets)
+        # labels.reverse(), daily_balance.reverse()
+
+        # for i, j in zip(labels, daily_balance):
+        #     print(f"{i}---{j}")
+        for dataset in datasets:
+            dataset["data"].reverse()
+        labels.reverse()
+        
+        lineChartData = {
+            "labels": labels,
+            "datasets" : datasets,
+        }
+
+        purchase_report = user_transactions.values(
+            'target_card_number'
+            ).annotate(
+            count=Count('card')
+            ).annotate(
+            sum=Sum('amount',filter=Q(action='deposit'),default=0)-Sum('amount',filter=Q(action='withdraw'),default=0)
+            ).order_by(
+            '-count'
+            )
+
+        context = {
+            'cards' : list(zip(user.cards.all(), BALANCE_BANK_COLORS)),
+            'cards_json' : serializers.serialize("json", user.cards.all()),
+            'lineChartData' : json.dumps(lineChartData),
+            'purchase_report' : purchase_report[:2],
+            }
+        
+        return render(request, "cards.html", context=context)
+    
+    elif request.method == 'POST':
+        form = forms.CardForm(request.POST)
+        if form.is_valid():
+            new_card = form.save(commit=False)
+            new_card.user = user
+            new_card.save()
+            print("CARD SUCCESSFULLY ADDED ")
+        else:
+            print("FAIL")
+            print("Errors:")
+            print(request.POST)
+            print(form.errors)
+
+        return redirect('/cards/')
+    
+def edit_card(request, card_id):
+    if request.method == 'POST':
+        form = forms.CardForm(request.POST, instance=models.Card.objects.get(user=user, id=card_id))
+        print(form)
+        if form.is_valid():
+            form.save()
+            print("EDIT SUCCESS")
+            print(form.fields)
+        else:
+            print("EDIT FAILED")
+            print("Errors:")
+            print(form.errors)
+
+        return redirect('/cards/')
+
+def delete_card(request, card_id):
+    if request.method == 'GET':
+        card = models.Card.objects.get(user=user, id=card_id)
+        if card:
+            print("CARD DELETE SUCCESS")
+            card.delete()
+        else:
+            print("CARD DELETE FAIL")
+            print("CARD NOT FOUND")
+        return redirect('/cards/')
 '''
 def LoginPage(request):
 
