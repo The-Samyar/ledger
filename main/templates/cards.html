@@ -1,0 +1,334 @@
+{% load static tailwind_tags %}
+{% load static %}
+{% load custom_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.css"  rel="stylesheet" /> -->
+    {% tailwind_css %}
+
+    <title>Bank Dashboard</title>
+</head>
+<body>
+    <div class="bg-dark w-full h-screen grid grid-cols-12">
+        <!-- SIDEBAR START -->
+        <div class="col-span-2 py-10">
+            <div class="ml-16 text-violet font-bold block text-3xl"><a href="#">ZBank.</a></div>
+            <ul class="pt-20 leading-8">
+                <li class="block font-medium text-menu hover:text-menulight ml-16 mb-5 hover:bg-light hover:rounded-l-full hover:ml-8 hover:pr-10 hover:pl-2">
+                    <a href="/">
+                        <svg class="w-6 h-6 inline-block mb-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="block font-medium text-menu hover:text-menulight ml-16 mb-5 hover:bg-light hover:rounded-l-full hover:ml-8 hover:pr-10 hover:pl-2">
+                    <a href="/transactions">
+                        <svg class="w-6 h-6 inline-block mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                        <span>Transactions</span>
+                    </a>
+                </li>
+                <li class="block font-medium text-menu hover:text-menulight ml-16 mb-5 hover:bg-light hover:rounded-l-full hover:ml-8 hover:pr-10 hover:pl-2">
+                    <a href="#">
+                        <svg class="w-6 h-6 inline-block mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                        <span>Cards</span>
+                    </a>
+                </li>
+                <li class="block font-medium text-menu hover:text-menulight ml-16 mb-5 hover:bg-light hover:rounded-l-full hover:ml-8 hover:pr-10 hover:pl-2">
+                    <a href="#">
+                        <svg class="w-6 h-6 inline-block mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                        <span>Profile</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- SIDEBAR END -->
+
+        <!-- MAIN BODY START -->
+        <div class="bg-light col-span-10 pt-8 pb-3 px-5">
+            <!-- TOP HEADER START -->
+            <div class="flex justify-between px-1">
+                <p class="text-lg text-white inline">
+                    Welcome back {{ user.first_name }},
+                </p>
+                <div class="text-sm text-slate-300 mr-3 flex items-center space-x-4" >
+                    <img id="avatarButton" type="button" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start" class="w-10 h-10 rounded-full cursor-pointer" src="{% static '/main/img/profile.webp'%}" alt="User dropdown">
+                    <!-- Dropdown menu -->
+                    <div id="userDropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                        <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                        <div>Bonnie Green</div>
+                        <div class="font-medium truncate">name@flowbite.com</div>
+                        </div>
+                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
+                        <li>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
+                        </li>
+                        <li>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
+                        </li>
+                        </ul>
+                        <div class="py-1">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
+                        </div>
+                    </div>
+                    <div class="font-medium dark:text-white">
+                        <div>{{ user.first_name }} {{user.last_name }}</div>
+                        <div class="text-sm text-gray-500 dark:text-gray-400">{% now "l, j F Y" %}</div>
+                    </div>
+                </div >
+            </div>
+            <!-- TOP HEADER END -->
+
+            <!-- CONTENT BODY START -->
+            <div class="grid grid-cols-3 grid-rows-2 gap-6 mt-10 ">
+                <!-- CARD INFO START -->
+                <div class=" col-start-1 col-span-1 bg-dark rounded-3xl">
+                    <div id="controls-carousel" class="relative w-full" data-carousel="static">
+                        <!-- Carousel wrapper -->
+                        <div class="relative h-72 overflow-hidden rounded-lg">
+                            {% for card, color in cards %}
+                            <div id="card{{ forloop.counter0 }}" class="hidden duration-700 ease-in-out" data-carousel-item="active">
+                                <!-- <img src="{% static '/main/img/carousel-1.svg'%}" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="..."> -->
+                                <div class="absolute block w-10/12 h-3/4 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 border-neutral-400  border-2 rounded-2xl p-6" style="background-color : {{ color }};">
+                                    <div class="text-xl">
+                                        {{ card.bank_name|upper }}
+                                    </div>
+                                    <div class="text-2xl text-center mt-10">
+                                        {% for chunk in card.card_number|separate %} {{ chunk }} {% endfor %}
+                                    </div>
+                                    <div class="absolute text-xl left-6 bottom-6">
+                                        ${{ card.balance }}
+                                    </div>
+                                    <div class="absolute text-xl right-6 bottom-6">
+                                        {{ card.expiry_date|date:"y/m" }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <!-- Slider controls -->
+                        <button type="button" class="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-2 cursor-pointer group focus:outline-none" data-carousel-prev>
+                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                                <svg aria-hidden="true" class="w-6 h-6 text-white dark:text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                <span class="sr-only">Previous</span>
+                            </span>
+                        </button>
+                        <button type="button" class="absolute top-0 right-0 z-30 flex items-center justify-center h-full px-2 cursor-pointer group focus:outline-none" data-carousel-next>
+                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                                <svg aria-hidden="true" class="w-6 h-6 text-white dark:text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                <span class="sr-only">Next</span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+                <!-- CARD INFO END -->
+                <!-- BALANCE CHART START -->
+                <div class=" col-start-2 col-span-2 row-start-1 row-span-full bg-dark rounded-3xl p-4">
+                    <span class="font-bold text-slate-300">Balance summary</span>
+                    <div class="w-full h-550">
+                        <canvas class="!w-full" id="lineChart"></canvas>
+                    </div>
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                    <script>
+
+                        var lineChartData = JSON.parse('{{ lineChartData|safe }}')
+                        console.log(lineChartData)
+                        const data = lineChartData
+    
+                        const configLineChart = {
+                            type: "line",
+                            data,
+                            options: {
+                                plugins: {
+                                    legend: {
+                                        labels: {
+                                            color : "#FBFBFF",
+                                            font: {
+                                                size: 14
+                                            }
+                                        }
+                                    }
+                                },
+                                maintainAspectRatio: false,
+
+                                scales: {
+                                    y : {
+                                        ticks : {
+                                            color : '#FBFBFF'
+                                        }
+                                    },
+                                    x : {
+                                        ticks : {
+                                            color : '#FBFBFF'
+                                        }
+                                    }
+                                }
+                            },
+                        };
+                        var lineChart = new Chart(
+                        document.getElementById("lineChart"),
+                        configLineChart
+                        );
+
+                      </script>
+                       
+                </div>
+                <!-- BALANCE CHART END -->
+                <!-- PURCHASE REPORT START -->
+                <div class="col-start-1 col-span-1 row-start-2 row-span-1 grid grid-rows-4 grid-cols-2 gap-6">
+                    <button data-modal-target="newCardModal" data-modal-toggle="newCardModal" class="row-start-1 row-span-1 col-start-1 col-span-1 p-4 bg-blue-600 hover:bg-blue-400 text-white rounded-3xl">
+                        Add new card +
+                    </button>
+                    <button data-modal-target="editCardModal" data-modal-toggle="editCardModal" class="row-start-1 row-span-1 col-start-2 col-span-1 p-4 bg-blue-600 hover:bg-blue-400 text-white rounded-3xl">
+                        Edit card
+                    </button>
+                    <!-- <div class="row-start-1 row-span-1 col-start-1 col-span-full p-4 bg-dark rounded-3xl">
+                    </div> -->
+                    <div class="row-start-2 row-span-full col-start-1 col-span-full p-4 bg-dark rounded-3xl ">
+                        <span class="font-bold text-slate-300">Purchase history</span>
+                        {% for row in purchase_report %}
+                        <div class="text-slate-400 mt-3 hover:text-slate-200">
+                            {% if row.sum < 0 %}
+                            <span>
+                                You have paid ${{ row.sum|abs }} to {{ row.target_card_number }} in {{ row.count }} transactions.
+                            </span>
+                            {% else %}
+                            <span>
+                                You have earned ${{ row.sum|abs }} from {{ row.target_card_number }} in {{ row.count }} transactions.
+                            </span>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+                <!-- PURCHASE REPORT END -->
+  
+                <!-- ADD CARD MODAL START -->
+                <div id="newCardModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                    <div class="relative w-full max-w-xl max-h-full">
+                        <!-- Modal content -->
+                        <div class="relative bg-dark rounded-lg shadow dark:bg-gray-700">
+                            <!-- Modal header -->
+                            <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                                <h3 class="text-xl font-semibold text-white">
+                                    Add new card
+                                </h3>
+                                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="newCardModal">
+                                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                    <span class="sr-only">Close modal</span>
+                                </button>
+                            </div>
+                            <!-- Modal body -->
+                            <div class="p-6 space-y-6">
+                                <form action="/cards/" method="post" id="addCardForm">
+                                    {% csrf_token %}
+                                    <label for="new_card_number" class="mt-2 text-violet rounded-lg p-2 border-0 text-sm">Card number</label>
+                                    <input id="new_card_number" class="input mt-2 bg-violet text-dark rounded-lg p-2 border-0 text-sm" name="card_number" type="text">
+
+                                    <label for="new_card_expdate" class="mt-2 text-violet rounded-lg p-2 border-0 text-sm">Expiry date</label>
+                                    <input id="new_card_expdate" class="input mt-2 bg-violet text-dark rounded-lg p-2 border-0 text-sm" name="expiry_date" type="date">
+                                    
+                                    <label for="new_card_bankname" class="mt-2 text-violet rounded-lg p-2 border-0 text-sm">Bank name</label>
+                                    <input id="new_card_bankname" class="input mt-2 bg-violet text-dark rounded-lg p-2 border-0 text-sm" name="bank_name" type="text">
+
+                                    <label for="new_card_balance" class="mt-2 text-violet rounded-lg p-2 border-0 text-sm">Balance</label>
+                                    <input id="new_card_balance" class="input mt-2 bg-violet text-dark rounded-lg p-2 border-0 text-sm" name="balance" type="number">
+                                </form>
+                            </div>
+                            <!-- Modal footer -->
+                            <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                                <button data-modal-hide="newCardModal" type="submit" form="addCardForm" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">I accept</button>
+                                <button data-modal-hide="newCardModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Decline</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ADD CARD MODAL END -->
+
+                <!-- EDIT CARD MODAL START -->
+                <div id="editCardModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                    <div class="relative w-full max-w-xl max-h-full">
+                        <!-- Modal content -->
+                        <div class="relative bg-dark rounded-lg shadow dark:bg-gray-700">
+                            <!-- Modal header -->
+                            <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                                <h3 class="text-xl font-semibold text-white">
+                                    Edit card
+                                </h3>
+                                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="editCardModal">
+                                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                    <span class="sr-only">Close modal</span>
+                                </button>
+                            </div>
+                            <!-- Modal body -->
+                            <div class="p-6 space-y-6">
+                                <form action="/cards/edit/" method="post" id="editCardForm">
+                                    {% csrf_token %}
+                                    <label class="mt-2 text-violet rounded-lg p-2 border-0 text-sm" for="targetCard">Target card:</label>
+                                    <select class="input mt-2 bg-violet text-dark rounded-lg p-2 border-0 text-sm" id="targetCard" name="target_card" onchange="fillEditCardForm(this)">
+                                        <option class="input mt-2 bg-violet text-dark rounded-lg p-2 border-0 text-sm" value=""></option>
+
+                                        {% for card in cards %}
+
+                                        <!-- card.0 is used because cards is a list of coupled items where the first item is card object and second is the color associated to the card -->
+                                        <option class="input mt-2 bg-violet text-dark rounded-lg p-2 border-0 text-sm" value="{{ card.0.id }}"> {{ card.0.card_number }} </option>
+
+                                        {% endfor %}
+                                    </select>
+                                    <br>
+    
+                                    <label for="edited_card_number" class="mt-2 text-violet rounded-lg p-2 border-0 text-sm">Card number</label>
+                                    <input name="card_number" id="edited_card_number" class="editInput mt-2 bg-violet text-dark rounded-lg p-2 border-0 text-sm" type="text">
+
+                                    <label for="edited_card_expdate" class="mt-2 text-violet rounded-lg p-2 border-0 text-sm">Expiry date</label>
+                                    <input name="expiry_date" id="edited_card_expdate" class="editInput mt-2 bg-violet text-dark rounded-lg p-2 border-0 text-sm" type="date">
+                                    
+                                    <label for="edited_card_bankname" class="mt-2 text-violet rounded-lg p-2 border-0 text-sm">Bank name</label>
+                                    <input name="bank_name" id="edited_card_bankname" class="editInput mt-2 bg-violet text-dark rounded-lg p-2 border-0 text-sm" type="text">
+
+                                    <label for="edited_card_balance" class="mt-2 text-violet rounded-lg p-2 border-0 text-sm">Balance</label>
+                                    <input name="balance" id="edited_card_balance" class="editInput mt-2 bg-violet text-dark rounded-lg p-2 border-0 text-sm" type="number">
+                                </form>
+                            </div>
+                            <!-- Modal footer -->
+                            <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                                <button data-modal-hide="editCardModal" type="submit" form="editCardForm" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">I accept</button>
+                                <button data-modal-hide="editCardModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Decline</button>
+                                <a data-modal-hide="editCardModal" href="#" id="deleteCard" class="text-white absolute right-6 bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg text-sm font-medium px-5 py-2.5 focus:z-10">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- EDIT CARD MODAL END -->
+            </div>
+            <!-- CONTENT BODY END -->
+        </div>
+        {{ cards_json|json_script:"cards-json" }}
+        <script>
+            function fillEditCardForm(selectedOption){
+                const cards = JSON.parse(JSON.parse(document.getElementById('cards-json').textContent));
+                for (i=0; i<cards.length; i++){
+                    if(cards[i].pk == selectedOption.value){
+                        card = cards[i].fields
+                        document.getElementById("edited_card_number").value = card['card_number']
+                        document.getElementById("edited_card_expdate").value = card['expiry_date']
+                        document.getElementById("edited_card_bankname").value = card['bank_name']
+                        document.getElementById("edited_card_balance").value = card['balance']
+                        document.getElementById('editCardForm').action = "/cards/edit/" + cards[i].pk + "/"
+                        document.getElementById("deleteCard").href = "/cards/delete/" + cards[i].pk + "/"
+                    }
+                }
+            }
+        </script>
+    </div>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script> -->
+    <script src="{% static 'flowbite.min.js'%}"></script>
+</body>
+</html>
