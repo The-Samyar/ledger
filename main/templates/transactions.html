@@ -117,11 +117,11 @@
                                                 <form action="edit/{{transaction.transaction_id}}/" method="post">
                                                     {% csrf_token %}
                                                     <td class="px-3 py-4 box-border" style="width: 15%;">
-                                                        <input class="input border-2 border-transparent enabled:animate-breathing rounded-md px-1 enabled:border-violet bg-inherit p-0 text-sm w-full" type="datetime-local" name="date_time" value="{{ transaction.date_time | date:'Y-m-d H:i'}}" onchange="addChangedInput()" disabled>
+                                                        <input class="input border-2 border-transparent enabled:animate-breathing-violet rounded-md px-1 enabled:border-violet bg-inherit p-0 text-sm w-full" type="datetime-local" name="date_time" value="{{ transaction.date_time | date:'Y-m-d H:i'}}" onchange="addChangedInput()" disabled>
                                                     </td>
                                                     <td class="px-3 py-4 box-border" style="width: 13%;">
                                                         <!-- <input class="input enabled:border-2 enabled:animate-pulse rounded-md px-1 border-violet bg-inherit p-0 border-0 text-sm w-full" type="text" name="target_card_number" value="{{ transaction.target_card_number }}" onchange="addChangedInput()" disabled> -->
-                                                        <select class="input border-2 border-transparent enabled:animate-breathing rounded-md px-1 enabled:border-violet bg-inherit p-0 text-sm w-full" onchange="addChangedInput()" disabled name="card" id="id_card">
+                                                        <select class="input border-2 border-transparent enabled:animate-breathing-violet rounded-md px-1 enabled:border-violet bg-inherit p-0 text-sm w-full" onchange="addChangedInput()" disabled name="card" id="id_card">
                                                             {% for card in user.cards.all %}
                                                             {% if card.card_number == transaction.card.card_number %}
                                                             <option selected value="{{ card.id }}">{{ card.card_number }}</option>
@@ -141,7 +141,7 @@
                                                             {% endif %}
                                                         </select> -->
                                                         <div>
-                                                            <button type="button" class="input action_button border-2 border-transparent enabled:animate-breathing rounded-md px-1 enabled:border-violet bg-inherit p-0 text-sm w-full" onclick="changeAction('{{ transaction.transaction_id }}')" disabled>
+                                                            <button type="button" class="input action_button border-2 border-transparent enabled:animate-breathing-violet rounded-md px-1 enabled:border-violet bg-inherit p-0 text-sm w-full" onclick="changeAction('{{ transaction.transaction_id }}')" disabled>
                                                                 <input type="text" class="input action_input" name="action" value="{{ transaction.action }}" hidden disabled>
                                                                 {% if transaction.action == 'deposit'%}
                                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -162,12 +162,12 @@
                                                         </div>
                                                     </td>
                                                     <td class="px-3 py-4 box-border" style="width: 15%;">
-                                                        <input class="input border-2 border-transparent enabled:animate-breathing rounded-md px-1 enabled:border-violet bg-inherit p-0 text-sm w-full" type="text" name="target_card_number" value="{{ transaction.target_card_number }}" onchange="addChangedInput()" disabled>
+                                                        <input class="input border-2 border-transparent enabled:animate-breathing-violet rounded-md px-1 enabled:border-violet bg-inherit p-0 text-sm w-full" type="text" name="target_card_number" value="{{ transaction.target_card_number }}" onchange="addChangedInput()" disabled>
                                                     </td>
                                                     <td class="px-3 py-4 box-border " style="width: 8%;">
                                                         <div class="flex justify-center">
                                                             <span>$</span>
-                                                            <input class="input border-2 border-transparent enabled:animate-breathing rounded-md px-1 enabled:border-violet bg-inherit p-0 text-sm w-full" type="number" name="amount" value="{{ transaction.amount }}" onchange="addChangedInput()" disabled>
+                                                            <input class="input border-2 border-transparent enabled:animate-breathing-violet rounded-md px-1 enabled:border-violet bg-inherit p-0 text-sm w-full" type="number" name="amount" value="{{ transaction.amount }}" onchange="addChangedInput()" disabled>
                                                         </div>
                                                     </td>
                                                     <td class="px-6 py-4 box-border" style="width: 3%;">
@@ -175,7 +175,7 @@
                                                             <button type="button" class="px-3 " onclick="messageEnable('{{ transaction.transaction_id}}')">
                                                                 View
                                                             </button>
-                                                            <input class="input border-2 border-transparent enabled:animate-breathing px-1 enabled:border-violet bg-dark w-80 p-3 text-sm z-10 absolute top-6 right-6 divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" type="text" name="notes" id="note{{ transaction.transaction_id }}" value="{{ transaction.notes }}"  onchange="addChangedInput()" hidden disabled>
+                                                            <input class="input border-2 border-transparent enabled:animate-breathing-violet px-1 enabled:border-violet bg-dark w-80 p-3 text-sm z-10 absolute top-6 right-6 divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" type="text" name="notes" id="note{{ transaction.transaction_id }}" value="{{ transaction.notes }}"  onchange="addChangedInput()" hidden disabled>
                                                         </div>
                                                     </td>
                                                     <td class="px-3 py-4 box-border" style="width: 3%;">
