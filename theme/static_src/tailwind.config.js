@@ -69,6 +69,8 @@ module.exports = {
             '400': '400px',
             '350': '350px',
             '300': '300px',
+            '250': '250px',
+            '240': '240px',
             '200': '200px',
             '150': '150px',
             '100': '100px',
@@ -86,18 +88,31 @@ module.exports = {
             '500': '500px',
             '450': '450px',
             '400': '400px',
+            '300': '300px',
+            '250': '250px',
+            '240': '240px',
+            '200': '200px',
             '140': '140px',
             '100': '100px',
             },
+            borderWidth: {
+            '3': '3px',
+            },
             keyframes : {
-                breathe : {
-                    '0%' : {border : '2px solid rgba(153, 153, 194, 1) ' },
+                breatheViolet : {
+                    '0%' : {border : '2px solid theme(colors.violet)' },
                     '50%' : {border : '2px solid rgba(153, 153, 194, 0)' },
-                    '100%' : {border : '2px solid rgba(153, 153, 194, 1)' },
+                    '100%' : {border : '2px solid theme(colors.violet)' },
+                },
+                breatheDark : {
+                    '0%' : {border : '3px solid theme(colors.dark)' },
+                    '50%' : {border : '3px solid rgba(153, 153, 194, 0)' },
+                    '100%' : {border : '3px solid theme(colors.dark)' },
                 },
             },
             animation: {
-                'breathing' : 'breathe 2s linear infinite',
+                'breathing-violet' : 'breatheViolet 2s linear infinite',
+                'breathing-dark' : 'breatheDark 2s linear infinite',
             }   
         },
     },
