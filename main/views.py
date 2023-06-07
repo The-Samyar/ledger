@@ -2,9 +2,14 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import models
 from django.db.models import Sum, Count, Q
 from . import models, forms
+from .models import User_info, Transaction
 import json
 import datetime
 from django.core import serializers
+from django.contrib.auth.forms import PasswordChangeForm
+from PIL import Image
+from pathlib import Path
+import os
 
 user = models.User.objects.get(username="akbar")
 
@@ -297,6 +302,116 @@ def delete_card(request, card_id):
             print("CARD DELETE FAIL")
             print("CARD NOT FOUND")
         return redirect('/cards/')
+    
+def profile(request):
+    if request.method == 'GET':
+        context = {
+            'user_info' : user,
+            'user_contacts': user.contacts.all(),
+            'genders' : models.User_info.gender.field.choices,
+        }
+        return render(request, 'profile.html', context=context)
+    elif request.method == 'POST':
+        user_form = forms.UserForm(request.POST, instance=user)
+        user_info_form = forms.User_infoForm(request.POST, instance=user.extra_info)
+        print(user_info_form)
+        if user_form.is_valid():
+            if user_info_form.is_valid():
+                print("####################")
+                print("BOTH FORMS ARE VALID")
+                print(request.POST)
+                print(user_info_form.cleaned_data)
+                
+                user_form.save()
+                user_info_form.save()
+                print(user.extra_info.gender)
+                print("Saved")
+                return redirect("/profile/")
+            else:
+                print("####################")
+                print("PROBLEM IN FORM2")
+                print(user_info_form.errors)
+                return redirect("/profile/")
+        else:
+            print("####################")
+            print("PROBLEM IN FORM1")
+            return redirect("/profile/")
+
+def add_pic(request):
+    if request.method == 'POST':
+        image_file = request.FILES['profile_picture']
+
+        image_address = f"main/static/main/img/users/{user.username}/"
+
+        try:
+            Path(image_address).mkdir(parents=True)
+            print("path created")
+        except FileExistsError:
+            print("path exists")
+        
+        image = Image.open(image_file)
+        image.save(image_address + "profile.webp")
+        image.close()
+
+        return redirect("/profile/")
+
+def delete_pic(request):
+    if request.method == 'GET':
+        image_address = f"main/static/main/img/users/{user.username}/profile.webp"
+        if os.path.exists(image_address):
+            os.remove(image_address)
+            print("deleted")
+        else:
+            print("file not found")
+            print(image_address)
+        return redirect("/profile/")
+
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(user, request.POST)
+        print(request.POST)
+        if form.is_valid():
+            print("##################")
+            print("Password change is valid")
+            form.save()
+        else:
+            print("##################")
+            print("There is an issue with password change:")
+            print(form.errors)
+
+        return redirect("/profile/")
+
+def add_contact(request):
+    if request.method == 'POST':
+        form = forms.ContactForm(request.POST)
+        if form.is_valid():
+            contact = form.save(commit=False)
+            contact.user = user
+            contact.save()
+    return redirect("/profile/")
+
+def edit_contact(request, contact_id):
+    if request.method == 'POST':
+        form = forms.ContactForm(request.POST, instance=models.Contact.objects.get(id = contact_id))
+        print(request.POST)
+        print(form)
+        if form.is_valid():
+            form.save()
+            print("Contact edited")
+        else:
+            print("There was some problem with editing your contact")
+            print(form.errors)
+    return redirect("/profile/")
+
+def delete_contact(request, contact_id):
+    if request.method == 'GET':
+        contact = models.Contact.objects.get(id=contact_id, user=user)
+        if contact:
+            contact.delete()
+            print("Contact deleted")
+        else:
+            print("Contact not found")
+    return redirect("/profile/")
 '''
 def LoginPage(request):
 
