@@ -86,70 +86,82 @@
             <!-- TOP HEADER END -->
 
             <!-- CONTENT BODY START -->
-            <div class="grid grid-cols-3 gap-6 mt-10 ">
+            <div class="flex justify-center mt-10 ">
                 <!-- USER INFO START -->
-                <div class="col-start-1 col-span-1 bg-dark rounded-3xl p-6 pb-2">
+                <div class="bg-dark rounded-3xl p-6 mr-6 pb-2 w-2/5">
                     <div class="flex">
-                        <img src="../static/main/img/profile.webp" alt="user profile" class=" h-240 w-240 object-cover rounded-3xl">
-                        <div class="w-full flex flex-col py-10 ml-4 justify-center">
-                            <button type="button" class="bg-blue-600 w-full mb-10 h-1/6 rounded-2xl hover:bg-blue-800" onclick="imgUploadBtn()">
-                                <form class="hidden" id="imgUploadForm" action="/profile/" method="get">
+                        {% with '/main/img/users/'|add:user_info.username|add:'/profile.webp' as image_url %}
+                        <img src="{% static image_url %}" alt="user profile" class=" h-240 w-240 object-cover rounded-3xl">
+                        {% endwith %}
+                        <div class="w-full flex flex-col py-10 ml-4 justify-center items-center">
+                            <button type="button" class="bg-blue-600 w-1/2 mb-10 h-2/6 rounded-2xl hover:bg-blue-800" onclick="imgUploadBtn()">
+                                <form class="hidden" id="imgUploadForm" action="/profile/add/profile-picture/" enctype="multipart/form-data" method="post">
                                     {% csrf_token %}
-                                    <input id="imgUploadInput" class="hidden" type="file">
+                                    <input id="imgUploadInput" class="hidden" type="file" name="profile_picture">
                                 </form>
                                 <span class="material-symbols-outlined align-bottom">
                                         add_photo_alternate
                                 </span>
                             </button>
 
-                            <a href="/profile/" class="flex justify-center bg-red-600 w-full mb-2 h-1/6 rounded-2xl hover:bg-red-800">
-                                <span class="material-symbols-outlined align-bottom">
+                            <a href="/profile/delete/profile-picture/" class="flex justify-center bg-red-600 w-1/2 mb-2 h-2/6 rounded-2xl hover:bg-red-800">
+                                <span class="material-symbols-outlined align-bottom self-center">
                                     delete_forever
                                 </span>
                             </a>
                         </div>
                     </div>
                     <div class="mt-4 text-dark ">
-                        <form id="editInfoForm">
+                        <form id="editInfoForm" action="/profile/" method="post">
+                            {% csrf_token %}
                             <div class="flex justify-between mb-2">
-                                <label class="text-violet rounded-lg p-2 mr-2" for="">
+                                <label class="text-violet rounded-lg p-2 mr-2 w-1/2" for="">
                                     First name : 
                                 </label>
-                                <input class="input bg-violet p-2 border-3 border-transparent enabled:animate-breathing-dark rounded-md enabled:border-dark bg-inherit text-sm" type="text" onchange="addChangedInput()" name="target_card_number" value="{{ user_info.first_name }}" disabled>
+                                <input class="input bg-violet p-2 border-3 border-transparent enabled:animate-breathing-dark rounded-md enabled:border-dark bg-inherit text-sm w-1/2" type="text" onchange="addChangedInput()" name="first_name" value="{{ user_info.first_name }}" disabled>
                             </div>
                             <div class="flex justify-between mb-2">
-                                <label class="text-violet rounded-lg p-2 mr-2" for="">
+                                <label class="text-violet rounded-lg p-2 mr-2 w-1/2" for="">
                                     Last name :
                                 </label>
-                                <input class="input bg-violet p-2 border-3 border-transparent enabled:animate-breathing-dark rounded-md enabled:border-violet bg-inherit text-sm" type="text" onchange="addChangedInput()" name="target_card_number" value="{{ user_info.last_name }}" disabled>
+                                <input class="input bg-violet p-2 border-3 border-transparent enabled:animate-breathing-dark rounded-md enabled:border-violet bg-inherit text-sm w-1/2" type="text" onchange="addChangedInput()" name="last_name" value="{{ user_info.last_name }}" disabled>
                             </div>
                             <div class="flex justify-between mb-2">
-                                <label class="text-violet rounded-lg p-2 mr-2" for="">
+                                <label class="text-violet rounded-lg p-2 mr-2 w-1/2" for="">
                                     Date of birthday :
                                 </label>
-                                <input class="input bg-violet p-2 border-3 border-transparent enabled:animate-breathing-dark rounded-md enabled:border-violet bg-inherit text-sm" type="text" onchange="addChangedInput()" name="target_card_number" value="{{ user_info.extra_info.dob }}" disabled>
+                                <input class="input bg-violet p-2 border-3 border-transparent enabled:animate-breathing-dark rounded-md enabled:border-violet bg-inherit text-sm w-1/2" type="date" onchange="addChangedInput()" name="dob" value="{{ user_info.extra_info.dob | date:'Y-m-d' }}" disabled>
                             </div>
                             <div class="flex justify-between mb-2">
-                                <label class="text-violet rounded-lg p-2 mr-2" for="">
+                                <label class="text-violet rounded-lg p-2 mr-2 w-1/2" for="">
                                     Email :
                                 </label>
-                                <input class="input bg-violet p-2 border-3 border-transparent enabled:animate-breathing-dark rounded-md enabled:border-violet bg-inherit text-sm" type="text" onchange="addChangedInput()" name="target_card_number" value="{{ user_info.email }}" disabled>
+                                <input class="input bg-violet p-2 border-3 border-transparent enabled:animate-breathing-dark rounded-md enabled:border-violet bg-inherit text-sm w-1/2" type="text" onchange="addChangedInput()" name="email" value="{{ user_info.email }}" disabled>
                             </div>
                             <div class="flex justify-between mb-2">
-                                <label class="text-violet rounded-lg p-2 mr-2" for="">
+                                <label class="text-violet rounded-lg p-2 mr-2 w-1/2" for="">
                                     Phone number :
                                 </label>
-                                <input class="input bg-violet p-2 border-3 border-transparent enabled:animate-breathing-dark rounded-md enabled:border-violet bg-inherit text-sm" type="text" onchange="addChangedInput()" name="target_card_number" value="{{ user_info.extra_info.phone_number }}" disabled>
+                                <input class="input bg-violet p-2 border-3 border-transparent enabled:animate-breathing-dark rounded-md enabled:border-violet bg-inherit text-sm w-1/2" type="text" onchange="addChangedInput()" name="phone_number" value="{{ user_info.extra_info.phone_number }}" disabled>
                             </div>
                             <div class="flex justify-between mb-2">
-                                <label class="text-violet rounded-lg p-2 mr-2" for="">
+                                <label class="text-violet rounded-lg p-2 mr-2 w-1/2" for="">
                                     Gender :
                                 </label>
-                                <input class="input bg-violet p-2 border-3 border-transparent enabled:animate-breathing-dark rounded-md enabled:border-violet bg-inherit text-sm" type="text" onchange="addChangedInput()" name="target_card_number" value="{{ user_info.extra_info.get_gender_display }}" disabled>
+                                <select class="input bg-violet p-2 border-3 border-transparent enabled:animate-breathing-dark rounded-md enabled:border-violet bg-inherit text-sm disabled:bg-violet w-1/2" onchange="addChangedInput()" disabled name="gender" id="user_gender">
+                                    {% for value, label in genders %}
+                                        {% if value == user_info.extra_info.gender %}
+                                            <option selected value="{{ value }}">{{ label }}</option>
+                                        {% else %}                                        
+                                            <option value="{{ value }}">{{ label }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+
+                                <!-- <input class="input bg-violet p-2 border-3 border-transparent enabled:animate-breathing-dark rounded-md enabled:border-violet bg-inherit text-sm" type="text" onchange="addChangedInput()" name="gender" value="{{ user_info.extra_info.gender }}" disabled> -->
                             </div>
                         </form>
                         <div class="flex">
-
                             <button data-modal-target="editPasswordModal" data-modal-toggle="editPasswordModal" class="bg-blue-600 text-black w-1/2 p-2 mb-2 h-1/6 rounded-lg hover:bg-blue-800">
                                 <span class="">
                                     Change password
@@ -213,17 +225,17 @@
                             </div>
                             <!-- Modal body -->
                             <div class="p-6 space-y-6">
-                                <form action="/profile/" method="post" id="editPasswordForm">
+                                <form action="/profile/edit/password/" method="post" id="editPasswordForm">
                                     {% csrf_token %}
                                     <div class="flex flex-col px-4 justify-center align-middle">
                                         <label for="old_password" class="mt-2 text-violet rounded-lg p-2 border-0 text-sm">Old password:</label>
                                         <input id="old_password" class="mt-2 bg-violet text-dark rounded-lg p-2 border-0 text-sm" name="old_password" type="password">
                                         
                                         <label for="new_password" class="mt-2 text-violet rounded-lg p-2 border-0 text-sm">New password:</label>
-                                        <input id="new_password" class="mt-2 bg-violet text-dark rounded-lg p-2 border-0 text-sm" name="new_password" type="password">
+                                        <input id="new_password" class="mt-2 bg-violet text-dark rounded-lg p-2 border-0 text-sm" name="new_password1" type="password">
                                         
                                         <label for="confirm_password" class="mt-2 text-violet rounded-lg p-2 border-0 text-sm">Confirm password:</label>
-                                        <input id="confirm_password" class="mt-2 bg-violet text-dark rounded-lg p-2 border-0 text-sm" name="confirm_password" type="password">
+                                        <input id="confirm_password" class="mt-2 bg-violet text-dark rounded-lg p-2 border-0 text-sm" name="new_password2" type="password">
                                     </div>
                                 </form>
                             </div>
@@ -274,12 +286,7 @@
                 </div> -->
                 <!-- EDIT INFO MODAL END -->
                 
-                <!-- USER INFO END -->
-                <div class="bg-dark rounded-3xl p-5">
-                    <span class="font-bold text-slate-300">Your recent activities</span>
-                </div>
-                <!-- USER CONTACTS START -->
-                <div>
+                <div class="w-2/5">
                     <div class="bg-dark rounded-3xl p-5 h-550">
                         <span class="font-bold text-slate-300">Contacts</span>
                         <div class="h-[calc(100%-1rem)] overflow-y-scroll vertical-scroll ">
@@ -361,7 +368,7 @@
                             </div>
                             <!-- Modal body -->
                             <div class="p-6 space-y-6">
-                                <form action="/profile/" method="post" id="">
+                                <form action="/profile/edit-contact/" method="post" id="">
                                     {% csrf_token %}
                                     <div class="flex flex-col px-4 justify-center align-middle">
                                         <label class="mt-2 text-violet rounded-lg p-2 border-0 text-sm">Contact's first name:</label>
@@ -376,7 +383,7 @@
                                         <div class="mt-2">
                                             <label for="is_business" class=" text-violet rounded-lg p-2 border-0 text-sm">Is your contact a business/shop?</label>
 
-                                            <input checked  type="checkbox" name="is_business" value="" class="input w-4 h-4 text-violet bg-gray-100 border-gray-300 rounded focus:ring-violet dark:focus:ring-violet dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <input checked type="checkbox" name="is_business" value="" class="input w-4 h-4 text-violet bg-gray-100 border-gray-300 rounded focus:ring-violet dark:focus:ring-violet dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
 
                                         </div>
                                     </div>
@@ -410,7 +417,7 @@
                             </div>
                             <!-- Modal body -->
                             <div class="p-6 space-y-6">
-                                <form action="/profile/" method="post" id="newContactForm">
+                                <form action="/profile/add-contact/" method="post" id="newContactForm">
                                     {% csrf_token %}
                                     <div class="flex flex-col px-4 justify-center align-middle">
                                         <label for="first_name" class="mt-2 text-violet rounded-lg p-2 border-0 text-sm">Contact's first name:</label>
@@ -425,7 +432,7 @@
                                         <div class="mt-2">
                                             <label for="is_business" class=" text-violet rounded-lg p-2 border-0 text-sm">Is your contact a business/shop?</label>
 
-                                            <input checked id="is_business" type="checkbox" name="is_business" value="" class="w-4 h-4 text-violet bg-gray-100 border-gray-300 rounded focus:ring-violet dark:focus:ring-violet dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <input id="is_business" type="checkbox" name="is_business" value="" class="w-4 h-4 text-violet bg-gray-100 border-gray-300 rounded focus:ring-violet dark:focus:ring-violet dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
 
                                             <!-- <div class="flex items-center mr-4">
                                                 <label for="red-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Red</label>
@@ -456,9 +463,10 @@
             let el = document.getElementById("editContactModal")
             form = el.children[0].children[1].children[0]
             form.id = 'editContactForm' + id
+            form.action = 'edit-contact/' + id + '/'
 
             delete_a_tag = el.children[0].children[2].children[1]
-            delete_a_tag.href += id + '/'
+            delete_a_tag.href = 'delete-contact/' + id + '/'
 
             inputs = form.getElementsByClassName('input')
 
@@ -468,12 +476,20 @@
 
             if (is_business == 'False'){
                 inputs[3].checked = false
+                inputs[3].value = false
             } else {
                 inputs[3].checked = true
+                inputs[3].value = true
             }
         }
 
         function submitEditContactForm(tag){
+            is_business = tag.parentNode.parentNode.children[1].children[0].children[1].children[6].children[1]
+            if(is_business.checked == true){
+                is_business.value = 'on'
+            } else {
+                is_business.value = null
+            }
             tag.parentNode.parentNode.children[1].children[0].submit()
         }
     </script>
