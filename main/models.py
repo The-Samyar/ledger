@@ -2,7 +2,6 @@ import datetime
 from django.db import models
 from django.contrib.auth.models import User
 
-
 class Card(models.Model):
     card_number = models.CharField(max_length=22)
 
@@ -60,4 +59,40 @@ class Transaction(models.Model):
     @property
     def transaction_id(self):
         return self._transaction_id
+
+class User_info(models.Model):
+    GENDER_CHOICES = [
+        ('m', 'Male'),
+        ('f', 'Female'),
+        ('n', 'Rather not say')
+    ]
+
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name="extra_info")
+
+    phone_number = models.CharField(null=True, blank=True, max_length=10)
+    
+    # age = models.IntegerField(null=True, blank=True)
+
+    gender = models.CharField(null=True, blank=True, choices=GENDER_CHOICES, max_length=1)
+
+    dob = models.DateField(null=True, blank=True)
+
+    # profile_picture = models.CharField(max_length=30, default="")
+
+    def __str__(self) -> str:
+        return f"{self.user.first_name} {self.user.last_name}"
+
+class Contact(models.Model):
+    user = models.ForeignKey(User, related_name='contacts', on_delete=models.DO_NOTHING, null=True)
+
+    first_name = models.CharField(max_length=40)
+
+    last_name = models.CharField(max_length=40, null=True, blank=True)
+
+    card_number = models.CharField(max_length=16)
+
+    is_business = models.BooleanField(default=False)
 
