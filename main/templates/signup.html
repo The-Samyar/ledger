@@ -1,0 +1,69 @@
+{% load static tailwind_tags %}
+{% load static %}
+{% load custom_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.css"  rel="stylesheet" /> -->
+        {% tailwind_css %}
+    </head>
+
+    <section class="bg-light">
+        <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+            <a href="#" class="flex items-center mb-6 font-bold text-3xl text-violet">
+                ZBank. 
+            </a>
+
+            <div class="w-full bg-dark rounded-3xl shadow dark:border md:mt-0 sm:max-w-md xl:p-0">
+                <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                    <h1 class="text-xl font-bold leading-tight tracking-tight text-violet md:text-2xl">
+                        Create account
+                    </h1>
+                    <form class="space-y-4 md:space-y-6" action="#">
+                        <div class="space-y-4">
+                            <div>
+                                <label for="first_name" class="block mb-2 text-sm font-medium text-slate-400">First name</label>
+                                <input type="text" name="first_name" id="first_name" class="bg-violet autofill:bg-violet  border border-dark text-gray-900 placeholder:text-gray-600 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="Your name.." required="">
+                            </div>
+                            <div>
+                                <label for="last_name" class="block mb-2 text-sm font-medium text-slate-400">Last name</label>
+                                <input type="text" name="last_name" id="last_name" class="bg-violet autofill:bg-violet  border border-dark text-gray-900 placeholder:text-gray-600 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="Your last name.." required="">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="username" class="block mb-2 text-sm font-medium text-slate-400">Username</label>
+                            <input type="email" name="email" id="email" placeholder="name@company.com" class="bg-violet autofill:bg-violet  border border-dark text-gray-900 placeholder:text-gray-600 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" required="">
+                        </div>
+                        <div>
+                            <label for="password" class="block mb-2 text-sm font-medium text-slate-400">Password</label>
+                            <input type="password" name="password1" id="password" placeholder="••••••••" class="bg-violet autofill:bg-violet  border border-dark text-gray-900 placeholder:text-gray-600 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" required="">
+                        </div>
+                        <div>
+                            <label for="confirm_password" class="block mb-2 text-sm font-medium text-slate-400">Confirm password</label>
+                            <input type="password" name="password2" id="confirm_password" placeholder="••••••••" class="bg-violet autofill:bg-violet  border border-dark text-gray-900 placeholder:text-gray-600 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" required="">
+                        </div>
+                        <!-- <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                              <input id="terms" aria-describedby="terms" type="checkbox" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" required="">
+                            </div>
+                            <div class="ml-3 text-sm">
+                              <label for="terms" class="font-light text-gray-500 dark:text-gray-300">I accept the <a class="font-medium text-primary-600 hover:underline dark:text-primary-500" href="#">Terms and Conditions</a></label>
+                            </div>
+                        </div> -->
+                        <div class="flex justify-center">
+                            <button type="submit" class="w-1/2 text-dark bg-violet hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Create an account</button>
+                        </div>
+                        <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                            Already have an account? <a href="/login/" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Login here</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</html>
+

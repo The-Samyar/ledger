@@ -1,0 +1,57 @@
+{% load static tailwind_tags %}
+{% load static %}
+{% load custom_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.css"  rel="stylesheet" /> -->
+        {% tailwind_css %}
+    </head>
+
+    <section class="bg-light">
+        <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+            <a href="#" class="flex items-center mb-6 font-bold text-3xl text-violet">
+                ZBank. 
+            </a>
+
+            <div class="w-full bg-dark rounded-3xl shadow dark:border md:mt-0 sm:max-w-md xl:p-0">
+                <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                    <h1 class="text-xl font-bold leading-tight tracking-tight text-violet md:text-2xl">
+                        Sign in to your account
+                    </h1>
+                    <form class="space-y-4 md:space-y-6" action="#">
+                        <div>
+                            <label for="username" class="block mb-2 text-sm font-medium text-slate-400">Username</label>
+                            <input type="email" name="username" id="username" class="bg-violet autofill:bg-violet  border border-dark text-gray-900 placeholder:text-gray-600 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="Your username.." required="">
+                        </div>
+                        <div>
+                            <label for="password" class="block mb-2 text-sm font-medium text-slate-400 ">Password</label>
+                            <input type="password" name="password" id="password" placeholder="••••••••" class="bg-violet autofill:bg-violet border border-dark text-gray-900 placeholder:text-gray-600 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" required="">
+                        </div>
+                        <!-- <div class="flex items-center justify-between">
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                <input id="remember" aria-describedby="remember" type="checkbox" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" required="">
+                                </div>
+                                <div class="ml-3 text-sm">
+                                <label for="remember" class="text-gray-500 dark:text-gray-300">Remember me</label>
+                                </div>
+                            </div>
+                            <a href="#" class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
+                        </div> -->
+                        <div class="flex justify-center">
+                            <button type="submit" class="w-2/6 text-dark bg-violet hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Sign in</button>
+                        </div>
+                        <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                            Don't have an account yet? <a href="/sign-up/" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</html>
