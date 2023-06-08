@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import models
+from django.contrib.auth import models, login, logout, authenticate
+from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Count, Q
 from . import models, forms
 from .models import User_info, Transaction
@@ -10,6 +11,8 @@ from django.contrib.auth.forms import PasswordChangeForm
 from PIL import Image
 from pathlib import Path
 import os
+
+
 
 user = models.User.objects.get(username="akbar")
 
@@ -412,6 +415,23 @@ def delete_contact(request, contact_id):
         else:
             print("Contact not found")
     return redirect("/profile/")
+
+def login(request):
+    if request.method == 'GET':
+        return render(request, "login.html", context={})
+    elif request.method == 'POST':
+        return redirect('/')
+
+def signup(request):
+    if request.method == 'GET':
+        return render(request, "signup.html", context={})
+    elif request.method == 'POST':
+        return redirect('/')
+
+def logout(request):
+    if request.method == 'GET':
+        return redirect('/')
+
 '''
 def LoginPage(request):
 
