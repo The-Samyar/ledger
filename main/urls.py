@@ -22,8 +22,8 @@ urlpatterns = [
     path("profile/edit-contact/<str:contact_id>/", views.edit_contact, name="edit contact info"),
     path("profile/delete-contact/<str:contact_id>/", views.delete_contact, name="delete contact"),
 
-    path("login/", views.login, name="login"),
-    path("sign-up/", views.signup, name="signup"),
-    path("log-out/", views.logout, name="logout"),
+    path("login/", views.user_login, name="login"),
+    path("sign-up/", views.user_signup, name="signup"),
+    path("log-out/", views.user_logout, name="logout"),
 
 ]

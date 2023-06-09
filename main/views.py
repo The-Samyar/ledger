@@ -7,7 +7,7 @@ from .models import User_info, Transaction
 import json
 import datetime
 from django.core import serializers
-from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.forms import PasswordChangeForm, UserCreationForm
 from PIL import Image
 from pathlib import Path
 import os
@@ -36,83 +36,81 @@ MONTHS = ["January","February","March","April","May","June","July","August","Sep
 #     }
 #     return render(request, "index.html", context)
 
+@login_required
 def index(request):
-    # TODO filter 'incomes' and 'expenses' to show only for the current month
+    if request.method == 'GET':
+        user = request.user
+        user_cards = user.cards.all()
+        transactions = models.Transaction.objects.filter(card__in=user_cards).order_by('-date_time')
+        deposits = transactions.filter(action='deposit')
+        withdraws = transactions.filter(action='withdraw')
 
-    user_cards = user.cards.all()
-    transactions = models.Transaction.objects.filter(card__in=user_cards).order_by('-date_time')
-    deposits = transactions.filter(action='deposit')
-    withdraws = transactions.filter(action='withdraw')
+        # Meta data for doghnut chart
+        doughnutChartData = {
+            "labels": list(user_cards.values_list('bank_name',flat=True)),
+            "datasets" : [{
+                    "label": "Balance",
+                    "data": list(user_cards.values_list('balance',flat=True)),
+                    "backgroundColor": BALANCE_BANK_COLORS[:len(user_cards)],
+                    "hoverOffset": 20,
+                    },],
+        }
 
-    doughnutChartData = {
-        "labels": list(user_cards.values_list('bank_name',flat=True)),
-        "datasets" : [{
-                "label": "Balance",
-                "data": list(user_cards.values_list('balance',flat=True)),
-                "backgroundColor": BALANCE_BANK_COLORS[:len(user_cards)],
-                "hoverOffset": 20,
-                },],
-    }
-    doughnutChartData = json.dumps(doughnutChartData)
+        # Jsonifies the meta data
+        doughnutChartData = json.dumps(doughnutChartData)
 
-    now = datetime.datetime.now()
-    labels = []
-    total_withdraws = []
-    total_deposits = []
-    for i in range(6):
-        desired_month = ((now.month-1) + 7 + i) % 12
-        labels.append(MONTHS[desired_month])
-        a = withdraws.filter(date_time__year=now.year, date_time__month=desired_month+1).aggregate(total=Sum('amount'))['total']
-        b = deposits.filter(date_time__year=now.year, date_time__month=desired_month+1).aggregate(total=Sum('amount'))['total']
-        total_withdraws.append(a if a != None else 0)
-        total_deposits.append(b if b != None else 0)
+        # Meta data preparation for line chart. The total amount is calculated monthly starting from 6 months ago
+        now = datetime.datetime.now()
+        labels = []
+        total_withdraws = []
+        total_deposits = []
+        for i in range(6):
+            desired_month = ((now.month-1) + 7 + i) % 12
+            labels.append(MONTHS[desired_month])
+            total_withdraws.append(withdraws.filter(date_time__year=now.year, date_time__month=desired_month+1).aggregate(total=Sum('amount', default=0))['total'])
+            total_deposits.append(deposits.filter(date_time__year=now.year, date_time__month=desired_month+1).aggregate(total=Sum('amount',default=0))['total'])
 
-    
+        lineChartData = {
+            "labels": labels,
+            "datasets" : [{
+                    "label": "Last 6 months expenses",
+                    "backgroundColor": "hsl(267, 83%, 67%)",
+                    "borderColor": "hsl(267, 83%, 67%)",
+                    "data": total_withdraws,
+                    },
+                    {
+                    "label": "Last 6 months earnings",
+                    "backgroundColor": "hsl(217, 57%, 51%)",
+                    "borderColor": "hsl(217, 57%, 51%)",
+                    "data": total_deposits,
+                    },],
+        }
 
-    lineChartData = {
-        "labels": labels,
-        "datasets" : [{
-                "label": "Last 6 months expenses",
-                "backgroundColor": "hsl(267, 83%, 67%)",
-                "borderColor": "hsl(267, 83%, 67%)",
-                "data": total_withdraws,
-                },
-                {
-                "label": "Last 6 months earnings",
-                "backgroundColor": "hsl(217, 57%, 51%)",
-                "borderColor": "hsl(217, 57%, 51%)",
-                "data": total_deposits,
-                },],
-    }
-        # const labels = ["January", "February", "March", "April", "May", "June"];
-        # const data = {
-        #     labels: labels,
-        #     datasets: [
-        #     {
-        #         label: "My First dataset",
-        #         backgroundColor: "hsl(217, 57%, 51%)",
-        #         borderColor: "hsl(217, 57%, 51%)",
-        #         data: [0, 10, 5, 2, 20, 30, 45],
-        #     },
-        #     ],
-        # };
+        lineChartData = json.dumps(lineChartData)
 
-    lineChartData = json.dumps(lineChartData)
+        # User profile picture. If not found sends a default picture's directory address
+        image_address = f"main/static/main/img/users/{user.username}/profile.webp"
+        if os.path.exists(image_address):
+            image_address = f"main/img/users/{user.username}/profile.webp"
+        else:
+            image_address = f"main/img/default_profile.svg"
 
-    context = {
-        'user' : user,
-        'deposits' : deposits[:3],
-        'withdraws' : withdraws[:3],
-        'balance' : user.cards.aggregate(total=Sum('balance')),
-        'incomes' : deposits.aggregate(total=Sum('amount')),
-        'expenses' : withdraws.aggregate(total=Sum('amount')),
-        'cards' : user_cards,
-        'doughnutChartData' : doughnutChartData,
-        'lineChartData' : lineChartData,
-    }
+        context = {
+            'user' : user,
+            'deposits' : deposits[:3],
+            'withdraws' : withdraws[:3],
+            'balance' : user.cards.aggregate(total=Sum('balance')),
+            'incomes' : deposits.aggregate(total=Sum('amount')),
+            'expenses' : withdraws.aggregate(total=Sum('amount')),
+            'cards' : user_cards,
+            'doughnutChartData' : doughnutChartData,
+            'lineChartData' : lineChartData,
+            'user_profile_picture' : image_address
+        }
 
-    return render(request, "index.html", context)
+        return render(request, "index.html", context)
 
+@login_required
 def transactions(request):
     if request.method == 'GET':
         context = {
@@ -416,21 +414,40 @@ def delete_contact(request, contact_id):
             print("Contact not found")
     return redirect("/profile/")
 
-def login(request):
+
+def user_login(request):
     if request.method == 'GET':
         return render(request, "login.html", context={})
     elif request.method == 'POST':
-        return redirect('/')
+        user = authenticate(request, username=request.POST["username"], password=request.POST["password"])
+        if user is not None:
+            login(request, user)
+            return redirect('/')
+        else:
+            print("Error: User not found")
+            return redirect('/login/')
 
-def signup(request):
+
+def user_signup(request):
     if request.method == 'GET':
         return render(request, "signup.html", context={})
     elif request.method == 'POST':
-        return redirect('/')
+        form = forms.SignupForm(request.POST)
+        if form.is_valid():
+            print(form)
+            user = form.save()
+            login(request, user)
+            return redirect('/')
+        else:
+            print("Sign up info is not valid")
+            print(form.errors)
+            return redirect('/sign-up/')
 
-def logout(request):
+            
+def user_logout(request):
     if request.method == 'GET':
-        return redirect('/')
+        logout(request)
+        return redirect('/login/')
 
 '''
 def LoginPage(request):

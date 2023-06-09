@@ -1,6 +1,7 @@
 from django import forms
 from . import models
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 
 class TransactionForm(forms.ModelForm):
     class Meta:
@@ -26,3 +27,8 @@ class ContactForm(forms.ModelForm):
     class Meta:
         model = models.Contact
         fields = ["first_name", "last_name", "card_number", "is_business"]
+
+class SignupForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ["username", "first_name", "last_name"]
