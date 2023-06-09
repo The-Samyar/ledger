@@ -178,15 +178,23 @@ def delete_transaction(request, transaction_id):
         print("Transaction was not found")
     return redirect('/transactions/')
 
+@login_required
 def cards(request):
+    user = request.user
     if request.method == 'GET':
         today = datetime.datetime.now()
         user_cards = user.cards.all()
+
+        # The date format shown for x axis labels of the line chart
         date_format = "%m %d"
-        current_balance = user_cards.aggregate(total_balance=Sum('balance'))['total_balance']
+
+        # Line chart meta data
+        current_balance = user_cards.aggregate(total_balance=Sum('balance', default=0))['total_balance']
         labels = [today.strftime(date_format)]
-        # daily_balance = [current_balance]
         user_transactions = models.Transaction.objects.filter(card__in=user_cards)
+        
+        # datasets holds the info for each card, but the 0th dataset in datasets is the total balance
+        # total balance dataset
         datasets = [{
                     "label": "Total balance",
                     "backgroundColor": "hsl(0, 0%, 100%)",
@@ -194,6 +202,8 @@ def cards(request):
                     "data": [current_balance],
                     },
                     ]
+        
+        # user cards datasets
         for k in range(len(user_cards)):
             datasets.append({
                 "label": user_cards[k].bank_name,
@@ -202,11 +212,12 @@ def cards(request):
                 "data": [user_cards[k].balance,],
                 })
 
+        # The loop goes back day by day for a whole month and each time the balance of all cards as well as the total balance are updated. The idea of going back day by day roots from the fact that the balance of previous day depends on the transactions happened today. So by reversing today's transactions, balance of yesterday can be calculated
         for i in range(1,30):
             target_date = today - datetime.timedelta(days=i)
-            # day_after = target_date + datetime.timedelta(days=1)
+
             labels.append(target_date.strftime(date_format))
-            # target_date = today - datetime.timedelta(days=i)
+
             target_date = target_date + datetime.timedelta(days=1)
             daily_transactions = user_transactions.filter(date_time__year=target_date.year, date_time__month=target_date.month,date_time__day=target_date.day)
             total_balance = 0
@@ -215,28 +226,17 @@ def cards(request):
                     deposits_sum=Sum('amount', filter=(Q(action='deposit') & Q(card=user_cards.get(bank_name=datasets[j]['label']))), default=0),
                     withdraws_sum=Sum('amount', filter=(Q(action='withdraw') & Q(card=user_cards.get(bank_name=datasets[j]['label']))), default=0)
                     )
-                # print(transactions_sums)
-                # deposits_sum = daily_transactions.filter(
-                #     card=user_cards.get(bank_name=datasets["label"])
-                #     ).aggregate(
-                #     deposits_sum=Sum('amount', default=0)
-                #     )["deposits_sum"]
-                # withdraws_sum = daily_transactions.filter(
-                #     card=user_cards.get(bank_name=datasets["label"])
-                #     ).aggregate(
-                #     withdraws_sum=Sum('amount', default=0)
-                #     )["withdraws_sum"]
+
                 card_balance = datasets[j]['data'][-1] - transactions_sums['deposits_sum'] + transactions_sums['withdraws_sum']
-                # print(card_balance)
+
                 datasets[j]['data'].append(card_balance)
+
+                # to update 0th dataset
                 total_balance += card_balance
+
             datasets[0]["data"].append(total_balance)
 
-            # print(datasets)
-        # labels.reverse(), daily_balance.reverse()
-
-        # for i, j in zip(labels, daily_balance):
-        #     print(f"{i}---{j}")
+        # Since the algorithm went back day by day, the calculated balances are in reversed order, so their order is reversed
         for dataset in datasets:
             dataset["data"].reverse()
         labels.reverse()
@@ -246,6 +246,7 @@ def cards(request):
             "datasets" : datasets,
         }
 
+        # contains the destination card number that has the highest transaction rate 
         purchase_report = user_transactions.values(
             'target_card_number'
             ).annotate(
@@ -266,44 +267,46 @@ def cards(request):
         return render(request, "cards.html", context=context)
     
     elif request.method == 'POST':
+        # adds new card
         form = forms.CardForm(request.POST)
         if form.is_valid():
             new_card = form.save(commit=False)
             new_card.user = user
             new_card.save()
-            print("CARD SUCCESSFULLY ADDED ")
+            print("Card was successfully added")
         else:
-            print("FAIL")
-            print("Errors:")
-            print(request.POST)
+            print("Cards was not added")
             print(form.errors)
 
         return redirect('/cards/')
     
+@login_required
 def edit_card(request, card_id):
     if request.method == 'POST':
-        form = forms.CardForm(request.POST, instance=models.Card.objects.get(user=user, id=card_id))
-        print(form)
-        if form.is_valid():
-            form.save()
-            print("EDIT SUCCESS")
-            print(form.fields)
+        user = request.user
+        instance = models.Card.objects.get(user=user, id=card_id)
+        if instance:
+            form = forms.CardForm(request.POST, instance=instance)
+            if form.is_valid():
+                form.save()
+                print("Card was edited successfully")
+            else:
+                print("Card was not edited")
+                print(form.errors)
         else:
-            print("EDIT FAILED")
-            print("Errors:")
-            print(form.errors)
-
+            print("Cards was not found")
         return redirect('/cards/')
 
+@login_required
 def delete_card(request, card_id):
     if request.method == 'GET':
+        user = request.user
         card = models.Card.objects.get(user=user, id=card_id)
         if card:
-            print("CARD DELETE SUCCESS")
+            print("Card was deleted")
             card.delete()
         else:
-            print("CARD DELETE FAIL")
-            print("CARD NOT FOUND")
+            print("Card was not found")
         return redirect('/cards/')
     
 def profile(request):
