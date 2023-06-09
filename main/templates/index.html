@@ -49,30 +49,27 @@
         <div class="bg-light col-span-10 py-8 px-5">
             <!-- TOP HEADER START -->
             <div class="flex justify-between px-1">
-                <p class="text-lg text-white inline">
+                <p class="text-lg text-slate-400 font-bold inline">
                     Welcome back {{ user.first_name }},
                 </p>
                 <div class="text-sm text-slate-300 mr-3 flex items-center space-x-4 relative" >
-                    <img id="avatarButton" type="button" onclick="dropDownFunction()" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start" class="w-10 h-10 rounded-full cursor-pointer" src="{% static '/main/img/profile.webp'%}" alt="User dropdown">
+                    <img id="avatarButton" type="button" onclick="dropDownFunction()" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start" class="w-10 h-10 rounded-full cursor-pointer" src="{% static user_profile_picture %}" alt="User dropdown">
                     <!-- Dropdown menu -->
-                    <div id="userDropdown" hidden class="z-10 absolute top-12 -left-4 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                        <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
-                        <div>{{ user.first_name }} {{ user.last_name }}</div>
-                        <div class="font-medium truncate">{{ user.email }}</div>
+                    <div id="userDropdown" hidden class="z-10 absolute top-12 -left-4 bg-violet divide-y divide-dark rounded-lg shadow w-44">
+                        <div class="px-4 py-3 text-sm text-gray-900">
+                            <div>{{ user.first_name }} {{ user.last_name }}</div>
+                            <div class="font-medium truncate">{{ user.email }}</div>
                         </div>
-                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
-                        <li>
-                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Profile</a>
-                        </li>
-                        <li>
-                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
-                        </li>
+                        <ul class="py-2 text-sm text-gray-700" aria-labelledby="avatarButton">
+                            <li class=" ">
+                                <a href="/profile/" class="block px-4 py-2 hover:text-white">Profile</a>
+                            </li>
+                            <li class=" ">
+                                <a href="/log-out/" class="block px-4 py-2 hover:text-white">Sign out</a>
+                            </li>
                         </ul>
-                        <div class="py-1">
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
-                        </div>
                     </div>
-                    <div class="font-medium dark:text-white">
+                    <div class="font-medium">
                         <div>{{ user.first_name }} {{user.last_name }}</div>
                         <div class="text-sm text-gray-500 dark:text-gray-400">{% now "l, j F Y" %}</div>
                     </div>
@@ -85,12 +82,8 @@
                 <div class=" col-start-1 col-span-3 row-start-1 row-span-1 grid grid-cols-2 grid-rows-1 gap-6">
                     <!-- INCOME START -->
                     <div class="bg-dark col-start-1 col-span-1 row-start-1 row-span-1 rounded-3xl p-4">
-                        <div class="flex justify-between">
+                        <div>
                             <span class="font-bold text-slate-300">Income</span>
-                            <button class="rounded-2xl text-center text-sm bg-light text-neutral-400 p-1.5">
-                                <span class="pl-1">Recent</span>
-                                <svg class="w-3 h-3 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                            </button>
                         </div>
                         <div class="text-center list-none list-outside hover:list-inside leading-loose font-bold text-5xl text-slate-400 hover:text-slate-200">
                             {{ incomes.total }}
@@ -100,12 +93,8 @@
                     
                     <!-- EXPENSES START -->
                     <div class="bg-dark col-start-2 col-span-1 row-start-1 row-span-1 rounded-3xl p-4">
-                        <div class="flex justify-between">
+                        <div>
                             <span class="font-bold text-slate-300">Expenses</span>
-                            <button class="rounded-2xl text-center text-sm bg-light text-neutral-400 p-1.5">
-                                <span class="pl-1">Recent</span>
-                                <svg class="w-3 h-3 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                            </button>
                         </div>
                         <div class="text-center list-none list-outside hover:list-inside leading-loose font-bold text-5xl text-slate-400 hover:text-slate-200">
                             {{ expenses.total }}
@@ -125,7 +114,6 @@
                             <!-- PIECHART START -->
                             <div>
                                 <div>
-
                                     <canvas class="overflow-visible mt-5 p-1" id="chartDoughnut"></canvas>
                                 </div>
                                   
@@ -165,7 +153,7 @@
                                 </script>
                             </div>
                             <!-- PIECHART END -->
-                            <div class=" overflow-y-scroll vertical-scroll h-350 w-140">
+                            <div class=" overflow-y-auto vertical-scroll h-350 w-140">
                                 {% for card in cards %}
                                 <div class="text-slate-200 mt-4">
                                     <span>
@@ -187,14 +175,10 @@
                 
                 <!-- WITHDRAWAL HISTORY START -->
                 <div class="bg-dark col-start-4 col-span-2 row-start-1 row-span-1 rounded-3xl p-4">
-                    <div class="flex justify-between">
+                    <div>
                         <span class="font-bold text-slate-300">Recent expenses</span>
-                        <button class="rounded-2xl text-center text-sm bg-light text-neutral-400 p-1.5">
-                            <span class="pl-1">Recent</span>
-                            <svg class="w-3 h-3 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </button>
                     </div>
-                    <div class="list-none list-outside hover:list-inside leading-loose">
+                    <div class="list-none list-outside hover:list-inside leading-loose divide-y divide-violet">
                         {% for withdraw in withdraws %}
                             <div class="flex justify-between text-slate-400 hover:text-slate-200">
                                 <span><svg class="w-4 h-4 inline-block mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
@@ -210,12 +194,8 @@
                 <div class="bg-dark col-start-6 col-span-2 row-start-1 row-span-1 rounded-3xl p-4">
                     <div class="flex justify-between">
                         <span class="font-bold text-slate-300">Recent incomes</span>
-                        <button class="rounded-2xl text-center text-sm bg-light text-neutral-400 p-1.5">
-                            <span class="pl-1">Recent</span>
-                            <svg class="w-3 h-3 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </button>
                     </div>
-                    <div class="list-none list-outside hover:list-inside leading-loose">
+                    <div class="list-none list-outside hover:list-inside leading-loose divide-y divide-violet">
                         {% for deposit in deposits %}
                             <div class="flex justify-between text-slate-400 hover:text-slate-200">
                                 <span><svg class="w-4 h-4 inline-block mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
@@ -229,14 +209,10 @@
 
                 <!-- GRAPH START -->
                 <div class="bg-dark col-start-4 col-span-4 row-start-2 row-span-2 rounded-3xl p-4">
-                    <div class="flex justify-between">
+                    <div>
                         <span class="font-bold text-slate-300">Expenditure summary</span>
-                        <button class="rounded-2xl text-center text-sm bg-light text-neutral-400 p-1.5">
-                            <span class="pl-1">Recent</span>
-                            <svg class="w-3 h-3 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </button>
                     </div>  
-                    <canvas class="p-2" id="chartLine"></canvas>
+                    <canvas class="p-2 mt-2" id="chartLine"></canvas>
 
                     <!-- Required chart.js -->
                     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
