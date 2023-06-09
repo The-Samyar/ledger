@@ -1,22 +1,18 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import models, login, logout, authenticate
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Count, Q
-from . import models, forms
-from .models import User_info, Transaction
+from django.core import serializers
+
 import json
 import datetime
-from django.core import serializers
-from django.contrib.auth.forms import PasswordChangeForm, UserCreationForm
 from PIL import Image
 from pathlib import Path
 import os
 
+from . import models, forms
 
-
-user = models.User.objects.get(username="akbar")
-
-# TODO generate colors on demand
 BALANCE_BANK_COLORS = ["rgb(133, 105, 241)",
                        "rgb(164, 101, 241)",
                        "rgb(101, 143, 241)",
@@ -308,42 +304,45 @@ def delete_card(request, card_id):
         else:
             print("Card was not found")
         return redirect('/cards/')
-    
+
+@login_required
 def profile(request):
+    user = request.user
     if request.method == 'GET':
         context = {
             'user_info' : user,
             'user_contacts': user.contacts.all(),
             'genders' : models.User_info.gender.field.choices,
         }
+
         return render(request, 'profile.html', context=context)
+    
+    # edits user info
     elif request.method == 'POST':
+        # handles the information related to django's User model
         user_form = forms.UserForm(request.POST, instance=user)
+
+        # handles the info related to User_info model
         user_info_form = forms.User_infoForm(request.POST, instance=user.extra_info)
-        print(user_info_form)
+
         if user_form.is_valid():
             if user_info_form.is_valid():
-                print("####################")
-                print("BOTH FORMS ARE VALID")
-                print(request.POST)
-                print(user_info_form.cleaned_data)
-                
                 user_form.save()
                 user_info_form.save()
-                print(user.extra_info.gender)
-                print("Saved")
+                print("User information was edited successfully")
                 return redirect("/profile/")
             else:
-                print("####################")
-                print("PROBLEM IN FORM2")
+                print("User information was not edited")
                 print(user_info_form.errors)
                 return redirect("/profile/")
         else:
-            print("####################")
-            print("PROBLEM IN FORM1")
+            print("User information was not edited")
+            print(user_form.errors)
             return redirect("/profile/")
 
+@login_required
 def add_pic(request):
+    user = request.user
     if request.method == 'POST':
         image_file = request.FILES['profile_picture']
 
@@ -361,33 +360,36 @@ def add_pic(request):
 
         return redirect("/profile/")
 
+@login_required
 def delete_pic(request):
+    user = request.user
     if request.method == 'GET':
         image_address = f"main/static/main/img/users/{user.username}/profile.webp"
         if os.path.exists(image_address):
             os.remove(image_address)
-            print("deleted")
+            print("Image was deleted")
         else:
             print("file not found")
-            print(image_address)
         return redirect("/profile/")
 
+@login_required
 def change_password(request):
+    user = request.user
     if request.method == 'POST':
         form = PasswordChangeForm(user, request.POST)
         print(request.POST)
         if form.is_valid():
-            print("##################")
-            print("Password change is valid")
+            print("Password was changed")
             form.save()
         else:
-            print("##################")
-            print("There is an issue with password change:")
+            print("Password was not changed")
             print(form.errors)
 
         return redirect("/profile/")
 
+@login_required
 def add_contact(request):
+    user = request.user
     if request.method == 'POST':
         form = forms.ContactForm(request.POST)
         if form.is_valid():
@@ -396,20 +398,26 @@ def add_contact(request):
             contact.save()
     return redirect("/profile/")
 
+@login_required
 def edit_contact(request, contact_id):
+    user = request.user
     if request.method == 'POST':
-        form = forms.ContactForm(request.POST, instance=models.Contact.objects.get(id = contact_id))
-        print(request.POST)
-        print(form)
-        if form.is_valid():
-            form.save()
-            print("Contact edited")
+        instance = models.Contact.objects.get(id = contact_id, user=user)
+        if instance:
+            form = forms.ContactForm(request.POST, instance=instance)
+            if form.is_valid():
+                form.save()
+                print("Contact was edited")
+            else:
+                print("Contact was not edited")
+                print(form.errors)
         else:
-            print("There was some problem with editing your contact")
-            print(form.errors)
+            print("Contact was not found")
     return redirect("/profile/")
 
+@login_required
 def delete_contact(request, contact_id):
+    user = request.user
     if request.method == 'GET':
         contact = models.Contact.objects.get(id=contact_id, user=user)
         if contact:
@@ -453,145 +461,3 @@ def user_logout(request):
     if request.method == 'GET':
         logout(request)
         return redirect('/login/')
-
-'''
-def LoginPage(request):
-
-    if request.method == 'GET':
-        context = {}
-        return render(request, 'login.html', context)
-
-    elif request.method == 'POST':
-        next = request.POST['next']
-        if not next:
-            next = 'api:home'
-
-        username = request.POST['username']
-        password = request.POST['password']
-                
-        user = authenticate(request, username=username, password=password)
-
-        if user is None:
-            context = {}
-            return render(request, 'login.html', context)
-        
-        elif user is not None:
-            login(request, user)
-            return redirect(next)
-
-
-def SignupPage(request):
-    if request.method == 'GET':
-
-        form = UserCreationForm()
-
-        context = {'form' : form}
-        return render(request, 'signup.html', context)
-
-    elif request.method == 'POST':
-
-        form = UserCreationForm(request.POST)
-
-        if form.is_valid():
-            form.save()
-
-            username = request.POST['username']
-            password = request.POST['password1']
-                    
-            user = authenticate(request, username=username, password=password)
-            login(request, user)
-            return redirect('api:home')
-        else:
-            print('form not valid')
-    else:
-        print('error')
-
-@login_required       
-def Homepage(request):
-
-    # Finds all the cards for the user and reformats them into a list
-
-    # Solution #1
-    # user_cards = []
-    # temp = Cards.objects.filter(user_id=request.user.id)
-    # for i in range(len(temp)):
-    #     user_cards.append(temp[i].card_number)
-
-
-    # Solution #2 -- Same output but simpler and lesser code
-
-    user_cards = Card.objects.filter(user_id=request.user.id).values_list('card_number')
-    income = Transaction.objects.filter(card_number__in = user_cards, action = 'deposit').aggregate(Sum('amount'))
-    expenses = Transaction.objects.filter(card_number__in = user_cards, action = 'withdraw').aggregate(Sum('amount'))
-    balance = (income['amount__sum'] - expenses['amount__sum'])
-    data = Transaction.objects.filter(card_number__in = user_cards)
-    
-    context = { 'date' : datetime.utcnow().strftime('%Y, %m, %d'),
-                'username' : request.user,
-                'balance' : balance,
-                'income' : income,
-                'expenses' : expenses,
-                'data' : data
-                }
-    return render(request, 'homepage.html', context)
-
-@login_required
-def Homepage_redirect(request):
-    return redirect(reverse('api:home'))
-
-
-@login_required
-def addTransaction(request):
-
-    if request.method == 'GET':
-        context = {'form' : NewTransaction(request)}
-        return render(request, 'addTransaction.html', context)
-
-    elif request.method == 'POST':
-
-        form = NewTransaction(request, request.POST)
-
-        if form.is_valid():
-
-            transaction = form.save(commit=False)
-
-            # now stores the time at the moment in Universal Standard Time (UTC)
-            # card_number stores the card number used at the time of purchase
-            # now and card_number combined with username of the user produce a unique 
-            # transaction id per transaction. (now/username/last for digits of card_number) 
-
-            now = datetime.utcnow().strftime('%y%m%d%H%M%S')
-            card_number = str(form.cleaned_data['card_number'])
-            transaction_id = now + str(request.user) + card_number[-4:]
-
-            transaction.transaction_id = transaction_id
-            transaction.save()
-
-        else :
-            print('#################\n#################\nERROR\n#################\n#################') 
-
-
-        return redirect('api:home')
-
-@login_required
-def addCard(request):
-
-    if request.method == 'GET':
-        context = {'form' : NewCard()}
-        return render(request, 'addCard.html', context)
-
-    elif request.method == 'POST':
-        form = NewCard(request.POST)
-
-        if form.is_valid():
-            card = form.save(commit=False)
-            card.user = request.user
-            card.save()
-        
-        return redirect('api:home')
-
-def Logout(request):
-    logout(request)
-    return redirect('api:login')
-
-'''
