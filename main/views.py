@@ -27,15 +27,6 @@ BALANCE_BANK_COLORS = ["rgb(133, 105, 241)",
 
 MONTHS = ["January","February","March","April","May","June","July","August","September", "October", "November", "December"]
 
-# Create your views here.
-# def index(request):
-#     context = {
-#         # 'card' : user.card_set.all(),
-#         # 'card' : user.cards.first(),
-#         'user' : user,
-#     }
-#     return render(request, "index.html", context)
-
 @login_required
 def index(request):
     if request.method == 'GET':
@@ -112,13 +103,16 @@ def index(request):
 
 @login_required
 def transactions(request):
+    user = request.user
     if request.method == 'GET':
         context = {
             'user' : user,
             'transactions' : models.Transaction.objects.filter(card__in=user.cards.all()).order_by('-date_time')
         }
         return render(request, "transactions.html", context)
+    
     elif request.method == 'POST':
+        # Submits a new transaction
         form = forms.TransactionForm(request.POST)
         if form.is_valid():
             user_card = form.cleaned_data['card']
@@ -127,53 +121,61 @@ def transactions(request):
             else:
                 user_card.balance -= form.cleaned_data['amount']
             user_card.save(), form.save()
-            print("SUCCESS")
+            print("Transaction successfully added")
         else:
-            print("FAIL")
+            print("Transaction was not added")
             print(form.errors)
         return redirect('/transactions/')
 
     
-
+@login_required
 def edit_transaction(request, transaction_id):
+    user = request.user
     if request.method == 'POST':
-        form = forms.TransactionForm(
-            request.POST,
-            instance = models.Transaction.objects.get(_transaction_id=transaction_id)
-            )
-        if form.is_valid() == True:
-            initial_card = models.Card.objects.get(id=form['card'].initial)
-            if form['action'].initial == 'deposit':
-                initial_card.balance -= form['amount'].initial
+        # Checks if the transaction belongs to the user
+        instance = models.Transaction.objects.get(_transaction_id=transaction_id, card__in=user.cards.all())
+        if instance:
+            form = forms.TransactionForm(
+                request.POST,
+                instance = instance
+                )
+            if form.is_valid() == True:
+                # Since transaction is being edited, balances of cards need to be changed too
+                initial_card = models.Card.objects.get(id=form['card'].initial)
+                if form['action'].initial == 'deposit':
+                    initial_card.balance -= form['amount'].initial
+                else:
+                    initial_card.balance += form['amount'].initial
+                initial_card.save()
+                
+                edited_card = models.Card.objects.get(id=form.cleaned_data['card'].id)
+                if form.cleaned_data['action'] == 'deposit':
+                    edited_card.balance += form.cleaned_data['amount']
+                else:
+                    edited_card.balance -= form.cleaned_data['amount']
+                edited_card.save()
+                form.save() 
+                print("Transaction was succseefully edited")
             else:
-                initial_card.balance += form['amount'].initial
-            initial_card.save()
-            
-            edited_card = models.Card.objects.get(id=form.cleaned_data['card'].id)
-            if form.cleaned_data['action'] == 'deposit':
-                edited_card.balance += form.cleaned_data['amount']
-            else:
-                edited_card.balance -= form.cleaned_data['amount']
-            edited_card.save()
-            form.save() 
-            print("SUCCESS")
+                print(form.errors)
         else:
-            print(form.errors.as_json)
+            print("Transaction was not found")
         return redirect('/transactions/')
-    
+
+@login_required
 def delete_transaction(request, transaction_id):
-    target_transaction = models.Transaction.objects.get(_transaction_id=transaction_id)
+    user = request.user
+    target_transaction = models.Transaction.objects.get(_transaction_id=transaction_id, cards__in=user.cards.all())
     if target_transaction:
         user_card = target_transaction.card
         if target_transaction.action == 'deposit':
             user_card.balance -= target_transaction.amount
         else:
             user_card.balance += target_transaction.amount
-
         target_transaction.delete(), user_card.save()
-        print("SUCCESS")
+        print("Transaction was successfully deleted")
     else:
-        print("FAIL")
+        print("Transaction was not found")
     return redirect('/transactions/')
 
 def cards(request):
