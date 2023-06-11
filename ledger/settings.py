@@ -137,6 +137,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "main\static",
     BASE_DIR / "theme\\static_src\\node_modules\\flowbite\\dist",
+    BASE_DIR / "theme\\static_src\\node_modules\\chart.js\\dist",
 ]
 
 # Default primary key field type
@@ -144,4 +145,4 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_URL = 'login'
+LOGIN_URL = '/login/'
