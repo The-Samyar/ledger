@@ -1,320 +1,173 @@
-{% load static tailwind_tags %}
-{% load static %}
+{% extends "base.html" %}
 {% load custom_tags %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% tailwind_css %}
+{% load static %}
 
-    <title>Bank Dashboard</title>
-</head>
-<body>
-    <div class="bg-dark w-full h-screen grid grid-cols-12">
-        <!-- SIDEBAR START -->
-        <div class="col-span-2 py-10">
-            <div class="ml-16 text-violet font-bold block text-3xl"><a href="#">ZBank.</a></div>
-            <ul class="pt-20 leading-8">
-                <li class="block font-medium text-menu hover:text-menulight ml-16 mb-5 hover:bg-light hover:rounded-l-full hover:ml-8 hover:pr-10 hover:pl-2">
-                    <a href="/">
-                        <svg class="w-6 h-6 inline-block mb-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li class="block font-medium text-menu hover:text-menulight ml-16 mb-5 hover:bg-light hover:rounded-l-full hover:ml-8 hover:pr-10 hover:pl-2">
-                    <a href="/transactions">
-                        <svg class="w-6 h-6 inline-block mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
-                        <span>Transactions</span>
-                    </a>
-                </li>
-                <li class="block font-medium text-menu hover:text-menulight ml-16 mb-5 hover:bg-light hover:rounded-l-full hover:ml-8 hover:pr-10 hover:pl-2">
-                    <a href="#">
-                        <svg class="w-6 h-6 inline-block mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
-                        <span>Cards</span>
-                    </a>
-                </li>
-                <li class="block font-medium text-menu hover:text-menulight ml-16 mb-5 hover:bg-light hover:rounded-l-full hover:ml-8 hover:pr-10 hover:pl-2">
-                    <a href="#">
-                        <svg class="w-6 h-6 inline-block mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                        <span>Profile</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <!-- SIDEBAR END -->
+{% block title %}
+<title>Transactions</title>
+{% endblock %}
 
-        <!-- MAIN BODY START -->
-        <div class="bg-light col-span-10 pt-8 pb-3 px-5">
-            <!-- TOP HEADER START -->
-            <div class="flex justify-between px-1">
-                <p class="text-lg text-white inline">
-                    Welcome back {{ user.first_name }},
-                </p>
-                <div class="text-sm text-slate-300 mr-3 flex items-center space-x-4" >
-                    <img id="avatarButton" type="button" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start" class="w-10 h-10 rounded-full cursor-pointer" src="{% static '/main/img/profile.webp'%}" alt="User dropdown">
-                    <!-- Dropdown menu -->
-                    <div id="userDropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                        <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
-                        <div>Bonnie Green</div>
-                        <div class="font-medium truncate">name@flowbite.com</div>
+{% block content %}
+<div class="grid grid-cols-7 gap-6 mt-10">
+    <!-- TRANSACTIONS TABLE START -->   
+    <div class="bg-dark col-start-1 col-span-full relative shadow-md rounded-3xl">
+        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
+            <thead class="text-xs uppercase sticky top-0 bg-violet text-dark">
+                <tr class="">
+                    <th scope="col" class="px-6 py-3 rounded-tl-3xl box-border" style="width: 22%;">
+                        From
+                    </th>
+                    <th scope="col" class="px-6 py-3 box-border" style="width: 20%;">
+                        To
+                    </th>
+                    <th scope="col" class="px-6 py-3 box-border" style="width: 15%;">
+                        Amount
+                    </th>
+                    <th scope="col" class="px-6 py-3 box-border " style="width: 19%;">
+                        Action
+                    </th>
+                    <th scope="col" class="px-6 py-3 rounded-tr-3xl box-border" style="width: 13%;">
+                        Notes
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="7">
+                        <div class="vertical-scroll overflow-y-auto h-430 rounded-bl-3xl  mr-1">
+                            <table class="w-full">
+                                {% for transaction in transactions %}
+                                <tr id="{{ transaction.transaction_id }}" class="border-b bg-dark border-gray-700 hover:bg-gray-600">
+                                    <form action="edit/{{transaction.transaction_id}}/" method="post">
+                                        {% csrf_token %}
+                                        <td class="px-3 py-4 box-border" style="width: 15%;">
+                                            <input class="input border-2 border-transparent enabled:animate-breathing-violet rounded-md px-1 enabled:border-violet bg-inherit p-0 text-sm w-full" type="datetime-local" name="date_time" value="{{ transaction.date_time | date:'Y-m-d H:i'}}" onchange="addChangedInput()" disabled>
+                                        </td>
+                                        <td class="px-3 py-4 box-border" style="width: 13%;">
+                                            <!-- <input class="input enabled:border-2 enabled:animate-pulse rounded-md px-1 border-violet bg-inherit p-0 border-0 text-sm w-full" type="text" name="target_card_number" value="{{ transaction.target_card_number }}" onchange="addChangedInput()" disabled> -->
+                                            <select class="input border-2 border-transparent enabled:animate-breathing-violet rounded-md px-1 enabled:border-violet bg-inherit p-0 text-sm w-full" onchange="addChangedInput()" disabled name="card" id="id_card">
+                                                {% for card in user.cards.all %}
+                                                {% if card.card_number == transaction.card.card_number %}
+                                                <option selected value="{{ card.id }}">{{ card.card_number }}</option>
+                                                {% else %}
+                                                <option value="{{ card.id }}">{{ card.card_number }}</option>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                        <td class=" px-3 py-4 box-border" style="width: 2%;">
+                                            <div>
+                                                <button type="button" class="input action_button border-2 border-transparent enabled:animate-breathing-violet rounded-md px-1 enabled:border-violet bg-inherit p-0 text-sm w-full" onclick="changeAction('{{ transaction.transaction_id }}')" disabled>
+                                                    <input type="text" class="input action_input" name="action" value="{{ transaction.action }}" hidden disabled>
+                                                    {% if transaction.action == 'deposit'%}
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                    <path class="text-green-600 green_arrow" stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
+                                                    </svg>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                    <path class="text-red-600 red_arrow opacity-20" stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                                                    </svg>
+                                                    {% else %}
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                    <path class="text-green-600 green_arrow opacity-20" stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
+                                                    </svg>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                    <path class="text-red-600 red_arrow" stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                                                    </svg>
+                                                    {% endif %}
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <td class="px-3 py-4 box-border" style="width: 15%;">
+                                            <input class="input border-2 border-transparent enabled:animate-breathing-violet rounded-md px-1 enabled:border-violet bg-inherit p-0 text-sm w-full" type="text" name="target_card_number" value="{{ transaction.target_card_number }}" onchange="addChangedInput()" disabled>
+                                        </td>
+                                        <td class="px-3 py-4 box-border " style="width: 8%;">
+                                            <div class="flex justify-center">
+                                                <span>$</span>
+                                                <input class="input border-2 border-transparent enabled:animate-breathing-violet rounded-md px-1 enabled:border-violet bg-inherit p-0 text-sm w-full" type="number" name="amount" value="{{ transaction.amount }}" onchange="addChangedInput()" disabled>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 box-border" style="width: 3%;">
+                                            <div class="relative">
+                                                <button type="button" class="px-3 " onclick="messageEnable('{{ transaction.transaction_id}}')">
+                                                    View
+                                                </button>
+                                                <input class="input border-2 border-transparent enabled:animate-breathing-violet px-1 enabled:border-violet bg-dark w-80 p-3 text-sm z-10 absolute top-6 right-6 divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" type="text" name="notes" id="note{{ transaction.transaction_id }}" value="{{ transaction.notes }}"  onchange="addChangedInput()" hidden disabled>
+                                            </div>
+                                        </td>
+                                        <td class="px-3 py-4 box-border" style="width: 3%;">
+                                            <div class="flex justify-between">
+                                                <button type="button" value="Edit" class="px-3 bg-light rounded-3xl border-violet border-2 edit_button" onclick="edit('{{ transaction.transaction_id}}')">
+                                                    Edit
+                                                </button>
+                                                <a href="delete/{{ transaction.transaction_id }}/" class="px-3  bg-light rounded-3xl border-violet border-2">
+                                                    Delete
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </form>
+                                </tr>
+                                {% endfor %}
+                                <script src="{% static '/main/js/transactions.js' %}"></script>
+
+                            </table>
                         </div>
-                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
-                        <li>
-                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
-                        </li>
-                        <li>
-                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
-                        </li>
-                        <li>
-                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
-                        </li>
-                        </ul>
-                        <div class="py-1">
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
-                        </div>
-                    </div>
-                    <div class="font-medium dark:text-white">
-                        <div>{{ user.first_name }} {{user.last_name }}</div>
-                        <div class="text-sm text-gray-500 dark:text-gray-400">{% now "l, j F Y" %}</div>
-                    </div>
-                </div >
-            </div>
-            <!-- TOP HEADER END -->
-
-            <!-- CONTENT BODY START -->
-            <div class="grid grid-cols-7 gap-6 mt-10">
-                <!-- TRANSACTIONS TABLE START -->   
-                <div class="bg-dark col-start-1 col-span-full relative shadow-md rounded-3xl">
-                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
-                        <thead class="text-xs uppercase sticky top-0 bg-violet text-dark">
-                            <tr class="">
-                                <th scope="col" class="px-6 py-3 rounded-tl-3xl box-border" style="width: 22%;">
-                                    From
-                                </th>
-                                <th scope="col" class="px-6 py-3 box-border" style="width: 20%;">
-                                    To
-                                </th>
-                                <th scope="col" class="px-6 py-3 box-border" style="width: 15%;">
-                                    Amount
-                                </th>
-                                <th scope="col" class="px-6 py-3 box-border " style="width: 19%;">
-                                    Action
-                                </th>
-                                <th scope="col" class="px-6 py-3 rounded-tr-3xl box-border" style="width: 13%;">
-                                    Notes
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td colspan="7">
-                                    <div class="vertical-scroll overflow-y-auto h-430 rounded-bl-3xl  mr-1">
-                                        <table class="w-full">
-                                            {% for transaction in transactions %}
-                                            <tr id="{{ transaction.transaction_id }}" class="border-b bg-dark border-gray-700 hover:bg-gray-600">
-                                                <form action="edit/{{transaction.transaction_id}}/" method="post">
-                                                    {% csrf_token %}
-                                                    <td class="px-3 py-4 box-border" style="width: 15%;">
-                                                        <input class="input border-2 border-transparent enabled:animate-breathing-violet rounded-md px-1 enabled:border-violet bg-inherit p-0 text-sm w-full" type="datetime-local" name="date_time" value="{{ transaction.date_time | date:'Y-m-d H:i'}}" onchange="addChangedInput()" disabled>
-                                                    </td>
-                                                    <td class="px-3 py-4 box-border" style="width: 13%;">
-                                                        <!-- <input class="input enabled:border-2 enabled:animate-pulse rounded-md px-1 border-violet bg-inherit p-0 border-0 text-sm w-full" type="text" name="target_card_number" value="{{ transaction.target_card_number }}" onchange="addChangedInput()" disabled> -->
-                                                        <select class="input border-2 border-transparent enabled:animate-breathing-violet rounded-md px-1 enabled:border-violet bg-inherit p-0 text-sm w-full" onchange="addChangedInput()" disabled name="card" id="id_card">
-                                                            {% for card in user.cards.all %}
-                                                            {% if card.card_number == transaction.card.card_number %}
-                                                            <option selected value="{{ card.id }}">{{ card.card_number }}</option>
-                                                            {% else %}
-                                                            <option value="{{ card.id }}">{{ card.card_number }}</option>
-                                                            {% endif %}
-                                                            {% endfor %}
-                                                        </select>
-                                                    </td>
-                                                    <td class=" px-3 py-4 box-border" style="width: 2%;">
-                                                        <!-- <select class="input enabled:border-2 enabled:animate-pulse rounded-md px-1 border-violet bg-inherit p-0 border-0 text-sm w-full" name="action" onchange="addChangedInput()" disabled>
-                                                            <option value="{{ transaction.action }}">{{ transaction.action | capfirst }}</option>
-                                                            {% if transaction.action == 'withdraw' %}
-                                                            <option value="deposit">Deposit</option>
-                                                            {% else %}
-                                                            <option value="withdraw">Withdraw</option>
-                                                            {% endif %}
-                                                        </select> -->
-                                                        <div>
-                                                            <button type="button" class="input action_button border-2 border-transparent enabled:animate-breathing-violet rounded-md px-1 enabled:border-violet bg-inherit p-0 text-sm w-full" onclick="changeAction('{{ transaction.transaction_id }}')" disabled>
-                                                                <input type="text" class="input action_input" name="action" value="{{ transaction.action }}" hidden disabled>
-                                                                {% if transaction.action == 'deposit'%}
-                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                                                <path class="text-green-600 green_arrow" stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
-                                                                </svg>
-                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                                                <path class="text-red-600 red_arrow opacity-20" stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                                                                </svg>
-                                                                {% else %}
-                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                                                <path class="text-green-600 green_arrow opacity-20" stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
-                                                                </svg>
-                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                                                <path class="text-red-600 red_arrow" stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                                                                </svg>
-                                                                {% endif %}
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                    <td class="px-3 py-4 box-border" style="width: 15%;">
-                                                        <input class="input border-2 border-transparent enabled:animate-breathing-violet rounded-md px-1 enabled:border-violet bg-inherit p-0 text-sm w-full" type="text" name="target_card_number" value="{{ transaction.target_card_number }}" onchange="addChangedInput()" disabled>
-                                                    </td>
-                                                    <td class="px-3 py-4 box-border " style="width: 8%;">
-                                                        <div class="flex justify-center">
-                                                            <span>$</span>
-                                                            <input class="input border-2 border-transparent enabled:animate-breathing-violet rounded-md px-1 enabled:border-violet bg-inherit p-0 text-sm w-full" type="number" name="amount" value="{{ transaction.amount }}" onchange="addChangedInput()" disabled>
-                                                        </div>
-                                                    </td>
-                                                    <td class="px-6 py-4 box-border" style="width: 3%;">
-                                                        <div class="relative">
-                                                            <button type="button" class="px-3 " onclick="messageEnable('{{ transaction.transaction_id}}')">
-                                                                View
-                                                            </button>
-                                                            <input class="input border-2 border-transparent enabled:animate-breathing-violet px-1 enabled:border-violet bg-dark w-80 p-3 text-sm z-10 absolute top-6 right-6 divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" type="text" name="notes" id="note{{ transaction.transaction_id }}" value="{{ transaction.notes }}"  onchange="addChangedInput()" hidden disabled>
-                                                        </div>
-                                                    </td>
-                                                    <td class="px-3 py-4 box-border" style="width: 3%;">
-                                                        <div class="flex justify-between">
-                                                            <button type="button" value="Edit" class="px-3 bg-light rounded-3xl border-violet border-2 edit_button" onclick="edit('{{ transaction.transaction_id}}')">
-                                                                Edit
-                                                            </button>
-                                                            <a href="delete/{{ transaction.transaction_id }}/" class="px-3  bg-light rounded-3xl border-violet border-2">
-                                                                Delete
-                                                            </a>
-                                                        </div>
-                                                    </td>
-                                                </form>
-                                            </tr>
-                                            {% endfor %}            
-                                            <script>
-                                                changedInputs = false
-                                                function addChangedInput(changedInput){
-                                                    changedInputs = true;
-                                                }
-
-                                                function messageEnable(tId){
-                                                    notes = document.getElementsByName('note')
-                                                    element = document.getElementById('note' + tId)
-                                                    for(i=0; i < notes.length; i++){
-                                                        if(notes[i] != element)
-                                                        notes[i].hidden = true
-                                                    }
-                                                    if(element.hidden == false){
-                                                        element.hidden = true
-                                                    } else {
-                                                        element.hidden = false
-                                                    }
-                                                }
-
-                                                function edit(tId){
-                                                    row = document.getElementById(tId)
-                                                    button = row.getElementsByClassName("edit_button")[0]
-                                                    inputs = row.getElementsByClassName("input")
-                                                    if(button.value == "Edit"){
-                                                        button.value = "Save"
-                                                        button.innerHTML = "Save"
-                                                        for(let i = 0; i < inputs.length; i++){
-                                                            inputs[i].disabled = false
-                                                        }
-                                                    } else {
-                                                        if (changedInputs == true ){
-                                                            row.getElementsByTagName("form")[0].submit()
-                                                        } else {
-                                                            button.value = "Edit"
-                                                            button.innerHTML = "Edit"
-                                                            for(let i = 0; i < inputs.length; i++){
-                                                                inputs[i].disabled = true
-                                                            }
-                                                        }
-                                                    }
-                                                }
-
-                                                function changeAction(tId){
-                                                    addChangedInput()
-                                                    action_button = document.getElementById(tId).getElementsByClassName('action_button')[0]
-                                                    action_input = action_button.getElementsByClassName('action_input')[0]
-                                                    if(action_input.value == 'deposit'){
-                                                        action_input.value = 'withdraw'
-                                                        action_button.getElementsByClassName('green_arrow')[0].style.opacity = '0.2'
-                                                        action_button.getElementsByClassName('red_arrow')[0].style.opacity = '1'
-                                                    } else if(action_input.value == 'withdraw'){
-                                                        action_input.value = 'deposit'
-                                                        action_button.getElementsByClassName('green_arrow')[0].style.opacity = '1'
-                                                        action_button.getElementsByClassName('red_arrow')[0].style.opacity = '0.2'
-                                                        
-                                                    }
-
-                                                }
-                                            </script>
-                                        </table>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- TRANSACTIONS TABLE END -->
-                <!-- TABLE INPUT START -->
-                <div class="col-start-1 col-span-full rounded-3xl bg-violet p-3 text-sm text-gray-400">
-                    <form action="" method="post">
-                        {% csrf_token %}
-                        <div class="flex justify-around">
-                            <div class="flex justify-around">
-                                <div class="w-1/6 mr-4 bg-dark rounded-2xl px-4 py-3">
-                                    <label class="font-bold text-gray-400" for="">Date and time:</label>
-                                    <input class="input mt-2 bg-violet text-dark rounded-lg p-2 border-0 text-sm w-full" type="datetime-local" name="date_time" value="">
-                                </div>
-                                <div class="w-1/6 mr-4 bg-dark rounded-2xl px-4 py-3">
-                                    <label class="font-bold text-gray-400" for="">From:</label>
-                                    <!-- <input class="input mt-2 bg-violet text-dark placeholder-slate-600 rounded-lg p-2 border-0 text-sm w-full" type="text" name="card" value="" placeholder="Card number..."> -->
-                                    <select class="input appearance-none mt-2 bg-violet text-dark placeholder-slate-600 rounded-lg p-2 border-0 text-sm w-full" onchange="addChangedInput()" name="card" id="id_card">
-                                        {% for card in user.cards.all %}
-                                        <option value="{{ card.id }}">{{ card.card_number }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <div class="w-1/6 mr-4 bg-dark rounded-2xl px-4 py-3">
-                                    <label class="font-bold text-gray-400" for="">Action:</label>
-                                    <select class="input mt-2 bg-violet text-dark rounded-lg p-2 border-0 text-sm w-full" name="action">
-                                        <option value="deposit">Deposit</option>
-                                        <option value="withdraw">Withdraw</option>
-                                    </select>
-                                    <!-- <input class="input mt-2 bg-violet text-dark placeholder-slate-600 rounded-lg p-2 border-0 text-sm w-full" type="text" name="to" value=""> -->
-                                </div>
-                                <div class="w-1/6 mr-4 bg-dark rounded-2xl px-4 py-3">
-                                    <label class="font-bold text-gray-400" for="">To:</label>
-                                    <input class="input mt-2 bg-violet text-dark placeholder-slate-600 rounded-lg p-2 border-0 text-sm w-full" type="text" name="target_card_number" value="" placeholder="Card number...">
-                                </div>
-                                <div class="w-1/6 mr-4 bg-dark rounded-2xl px-4 py-3">
-                                    <label class="font-bold text-gray-400" for="">Amount:</label>
-                                    <div class="flex justify-center ">
-                                        <span class=" mt-4 -ml-3 mr-1">$</span>
-                                        <input class="input mt-2 bg-violet text-dark placeholder-slate-600 rounded-lg p-2 border-0 text-sm w-full" type="number" name="amount" value="" >
-                                    </div>
-                                    <!-- <input class="input mt-2 bg-violet text-dark placeholder-slate-600 rounded-lg p-2 border-0 text-sm w-full" type="text" name="to" value="" placeholder="$"> -->
-                                </div>
-                                <div class="w-1/6 bg-dark rounded-xl p-4">
-                                    <label class="font-bold text-gray-400" for="">Notes:</label>
-                                    <input class="input mt-2 bg-violet text-dark placeholder-slate-600 rounded-lg p-2 border-0 text-sm w-full" type="text" name="notes" value="" placeholder="Notes...">
-                                </div>
-                            </div>
-                            <div class="flex justify-center align-middle">
-                                <button class="  px-3 ml-2 bg-dark rounded-xl border-violet border-2" type="submit">
-                                    Enter
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <!-- TABLE INPUT END -->
-            </div>
-            <!-- CONTENT BODY END -->
-        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-</body>
-</html>
+    <!-- TRANSACTIONS TABLE END -->
+    <!-- TABLE INPUT START -->
+    <div class="col-start-1 col-span-full rounded-3xl bg-violet p-3 text-sm text-gray-400">
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="flex justify-around">
+                <div class="flex justify-around">
+                    <div class="w-1/6 mr-4 bg-dark rounded-2xl px-4 py-3">
+                        <label class="font-bold text-gray-400" for="">Date and time:</label>
+                        <input class="input mt-2 bg-violet text-dark rounded-lg p-2 border-0 text-sm w-full" type="datetime-local" name="date_time" value="">
+                    </div>
+                    <div class="w-1/6 mr-4 bg-dark rounded-2xl px-4 py-3">
+                        <label class="font-bold text-gray-400" for="">From:</label>
+                        <!-- <input class="input mt-2 bg-violet text-dark placeholder-slate-600 rounded-lg p-2 border-0 text-sm w-full" type="text" name="card" value="" placeholder="Card number..."> -->
+                        <select class="input appearance-none mt-2 bg-violet text-dark placeholder-slate-600 rounded-lg p-2 border-0 text-sm w-full" onchange="addChangedInput()" name="card" id="id_card">
+                            {% for card in user.cards.all %}
+                            <option value="{{ card.id }}">{{ card.card_number }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="w-1/6 mr-4 bg-dark rounded-2xl px-4 py-3">
+                        <label class="font-bold text-gray-400" for="">Action:</label>
+                        <select class="input mt-2 bg-violet text-dark rounded-lg p-2 border-0 text-sm w-full" name="action">
+                            <option value="deposit">Deposit</option>
+                            <option value="withdraw">Withdraw</option>
+                        </select>
+                        <!-- <input class="input mt-2 bg-violet text-dark placeholder-slate-600 rounded-lg p-2 border-0 text-sm w-full" type="text" name="to" value=""> -->
+                    </div>
+                    <div class="w-1/6 mr-4 bg-dark rounded-2xl px-4 py-3">
+                        <label class="font-bold text-gray-400" for="">To:</label>
+                        <input class="input mt-2 bg-violet text-dark placeholder-slate-600 rounded-lg p-2 border-0 text-sm w-full" type="text" name="target_card_number" value="" placeholder="Card number...">
+                    </div>
+                    <div class="w-1/6 mr-4 bg-dark rounded-2xl px-4 py-3">
+                        <label class="font-bold text-gray-400" for="">Amount:</label>
+                        <div class="flex justify-center ">
+                            <span class=" mt-4 -ml-3 mr-1">$</span>
+                            <input class="input mt-2 bg-violet text-dark placeholder-slate-600 rounded-lg p-2 border-0 text-sm w-full" type="number" name="amount" value="" >
+                        </div>
+                        <!-- <input class="input mt-2 bg-violet text-dark placeholder-slate-600 rounded-lg p-2 border-0 text-sm w-full" type="text" name="to" value="" placeholder="$"> -->
+                    </div>
+                    <div class="w-1/6 bg-dark rounded-xl p-4">
+                        <label class="font-bold text-gray-400" for="">Notes:</label>
+                        <input class="input mt-2 bg-violet text-dark placeholder-slate-600 rounded-lg p-2 border-0 text-sm w-full" type="text" name="notes" value="" placeholder="Notes...">
+                    </div>
+                </div>
+                <div class="flex justify-center align-middle">
+                    <button class="  px-3 ml-2 bg-dark rounded-xl border-violet border-2" type="submit">
+                        Enter
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- TABLE INPUT END -->
+</div>
+{% endblock %}
