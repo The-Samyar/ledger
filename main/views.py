@@ -75,13 +75,6 @@ def index(request):
 
         lineChartData = json.dumps(lineChartData)
 
-        # User profile picture. If not found sends a default picture's directory address
-        image_address = f"main/static/main/img/users/{user.username}/profile.webp"
-        if os.path.exists(image_address):
-            image_address = f"main/img/users/{user.username}/profile.webp"
-        else:
-            image_address = f"main/img/default_profile.svg"
-
         context = {
             'user' : user,
             'deposits' : deposits[:3],
@@ -92,10 +85,20 @@ def index(request):
             'cards' : user_cards,
             'doughnutChartData' : doughnutChartData,
             'lineChartData' : lineChartData,
-            'user_profile_picture' : image_address
+            'user_profile_picture' : image_address(user)
         }
 
         return render(request, "index.html", context)
+
+# Returns user's image url. If no image, then return the default image (icon) address
+def image_address(user):
+    # User profile picture. If not found sends a default picture's directory address
+    image_address = f"main/static/main/img/users/{user.username}/profile.webp"
+    if os.path.exists(image_address):
+        image_address = f"main/img/users/{user.username}/profile.webp"
+    else:
+        image_address = f"main/img/default_profile.svg"
+    return image_address
 
 @login_required
 def transactions(request):
@@ -103,7 +106,9 @@ def transactions(request):
     if request.method == 'GET':
         context = {
             'user' : user,
-            'transactions' : models.Transaction.objects.filter(card__in=user.cards.all()).order_by('-date_time')
+            'transactions' : models.Transaction.objects.filter(card__in=user.cards.all()).order_by('-date_time'),
+            'user_profile_picture' : image_address(user)
+
         }
         return render(request, "transactions.html", context)
     
@@ -258,6 +263,7 @@ def cards(request):
             'cards_json' : serializers.serialize("json", user.cards.all()),
             'lineChartData' : json.dumps(lineChartData),
             'purchase_report' : purchase_report[:2],
+            'user_profile_picture' : image_address(user)
             }
         
         return render(request, "cards.html", context=context)
@@ -313,6 +319,7 @@ def profile(request):
             'user_info' : user,
             'user_contacts': user.contacts.all(),
             'genders' : models.User_info.gender.field.choices,
+            'user_profile_picture' : image_address(user)
         }
 
         return render(request, 'profile.html', context=context)
@@ -449,6 +456,7 @@ def user_signup(request):
         if form.is_valid():
             print(form)
             user = form.save()
+            user_extra_info = models.User_info.objects.create(user=user)
             login(request, user)
             return redirect('/')
         else:
