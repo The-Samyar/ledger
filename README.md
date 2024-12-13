@@ -104,25 +104,6 @@ Follow these instructions to set up and run both the backend and frontend for Le
 
 4. Use the application to track transactions, generate reports, and manage finances.
 
-## 🤝 Contributing
-We welcome contributions! To get started:  
-
-1. Fork the repository.  
-2. Create a new branch:  
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-3. Commit your changes:
-   ```bash
-   git commit -m "Add some feature"
-   ```
-
-4. Push the branch:
-   ```bash
-   git push origin feature/your-feature-name
-   ```
-
-5. Open a pull request.
 
 ## 📝 License
 This project is licensed under the [MIT License](LICENSE).
